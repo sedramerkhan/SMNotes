@@ -1,5 +1,11 @@
 package com.smnotes.presentation.notesScreen.components
 
+import android.view.animation.OvershootInterpolator
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
@@ -8,7 +14,9 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.runtime.Composable
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.StarBorder
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
@@ -22,6 +30,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.ColorUtils
 import com.smnotes.domain.model.Note
+import com.smnotes.presentation.theme.Gold
+import kotlinx.coroutines.launch
 
 @Composable
 fun NoteItem(
@@ -29,8 +39,17 @@ fun NoteItem(
     modifier: Modifier = Modifier,
     cornerRadius: Dp = 10.dp,
     cutCornerSize: Dp = 30.dp,
-    onDeleteClick: () -> Unit
+    onDeleteClick: () -> Unit,
+    onImportantClick: () -> Unit,
 ) {
+    var startAnimation by remember { mutableStateOf(note.important) }
+
+    val animateColor = animateColorAsState(
+        targetValue = if (startAnimation) Gold  else MaterialTheme.colors.background,
+        animationSpec = tween(
+            durationMillis = 500
+        )
+    )
     Box(
         modifier = modifier
     ) {
@@ -81,15 +100,30 @@ fun NoteItem(
                 overflow = TextOverflow.Ellipsis
             )
         }
-        IconButton(
-            onClick = onDeleteClick,
-            modifier = Modifier.align(Alignment.BottomEnd)
-        ) {
-            Icon(
-                imageVector = Icons.Default.Delete,
-                contentDescription = "Delete note",
-                tint = MaterialTheme.colors.onSurface
-            )
+        Row(modifier = Modifier.align(Alignment.BottomEnd)) {
+            IconButton(
+                onClick = {
+                    onImportantClick()
+                    startAnimation = !startAnimation
+                },
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Star,
+                    contentDescription = "important note",
+                    tint = animateColor.value
+                )
+            }
+
+            IconButton(
+                onClick = onDeleteClick,
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = "Delete note",
+                    tint = MaterialTheme.colors.onSurface
+                )
+            }
         }
+
     }
 }

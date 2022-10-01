@@ -107,6 +107,9 @@ fun NotesScreen(
                                     viewModel.onEvent(NotesEvent.RestoreNote)
                                 }
                             }
+                        },
+                        onImportantClick = {
+                            viewModel.onEvent(NotesEvent.ImportantNote(note))
                         }
                     )
                     Spacer(modifier = Modifier.height(16.dp))

@@ -29,3 +29,5 @@ val Grey1 = Color(0xFFF2F2F2)
 
 val RedErrorDark = Color(0xFFB00020)
 val RedErrorLight = Color(0xFFEF5350)
+
+val Gold = Color(0xFFFFD700)

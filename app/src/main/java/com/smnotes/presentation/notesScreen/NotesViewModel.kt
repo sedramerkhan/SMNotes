@@ -58,6 +58,11 @@ class NotesViewModel @Inject constructor(
                     isOrderSectionVisible = !state.value.isOrderSectionVisible
                 )
             }
+            is NotesEvent.ImportantNote ->{
+                viewModelScope.launch {
+                    noteUseCases.addNote(event.note.copy(important = !event.note.important))
+                }
+            }
         }
     }
 
