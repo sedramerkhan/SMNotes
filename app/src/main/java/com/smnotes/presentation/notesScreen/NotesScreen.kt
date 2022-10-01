@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
@@ -20,7 +21,7 @@ import com.smnotes.presentation.notesScreen.components.NoteItem
 import com.smnotes.presentation.notesScreen.components.OrderSection
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.smnotes.presentation.destinations.NoteScreenDestination
-import com.smnotes.presentation.noteScreen.NoteScreen
+import com.smnotes.presentation.notesScreen.components.CustomTopAppBar
 import com.smnotes.presentation.utils.defaultModifier
 import kotlinx.coroutines.launch
 
@@ -36,6 +37,20 @@ fun NotesScreen(
     val scope = rememberCoroutineScope()
 
     Scaffold(
+        topBar = {
+           CustomTopAppBar(title = "Notes"){
+               IconButton(
+                   onClick = {
+                       viewModel.onEvent(NotesEvent.ToggleOrderSection)
+                   },
+               ) {
+                   Icon(
+                       imageVector = Icons.Default.Sort,
+                       contentDescription = "Sort"
+                   )
+               }
+           }
+        },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
@@ -50,37 +65,16 @@ fun NotesScreen(
     ) {
         Column(
             modifier = Modifier
-                .defaultModifier(16.dp,16.dp)
+                .padding(16.dp)
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Your note",
-                    style = MaterialTheme.typography.h4
-                )
-                IconButton(
-                    onClick = {
-                        viewModel.onEvent(NotesEvent.ToggleOrderSection)
-                    },
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Sort,
-                        contentDescription = "Sort"
-                    )
-                }
-            }
+
             AnimatedVisibility(
                 visible = state.isOrderSectionVisible,
                 enter = fadeIn() + slideInVertically(),
                 exit = fadeOut() + slideOutVertically()
             ) {
                 OrderSection(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 16.dp),
+                    modifier = Modifier.fillMaxWidth(),
                     noteOrder = state.noteOrder,
                     onOrderChange = {
                         viewModel.onEvent(NotesEvent.Order(it))
@@ -95,7 +89,7 @@ fun NotesScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable {
-                              navigator.navigate(NoteScreenDestination(note.id,note.color))
+                                navigator.navigate(NoteScreenDestination(note.id, note.color))
                             },
                         onDeleteClick = {
                             viewModel.onEvent(NotesEvent.DeleteNote(note))

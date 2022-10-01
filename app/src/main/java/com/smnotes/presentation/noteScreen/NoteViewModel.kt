@@ -42,7 +42,7 @@ class NoteViewModel @Inject constructor(
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
-    private var currentNoteId: Long = -1
+    private var currentNoteId: Long = 0
 
     init {
         NoteScreenDestination.argsFrom(savedStateHandle).noteId.let { noteId ->

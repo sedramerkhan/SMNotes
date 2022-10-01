@@ -12,7 +12,7 @@ data class Note(
     val color: Int,
     val important: Boolean = false,
     @PrimaryKey(autoGenerate = true)
-    val id: Long = -1,
+    val id: Long = 0,
 ) {
     companion object {
         val noteColors = listOf(RedOrange, LightGreen, Violet, BabyBlue, RedPink, Teal200, Purple200)
