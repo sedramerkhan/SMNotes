@@ -1,6 +1,8 @@
 package com.smnotes.presentation.notesScreen
 
 import androidx.compose.animation.*
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -22,39 +24,39 @@ import com.smnotes.presentation.notesScreen.components.OrderSection
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.smnotes.presentation.destinations.NoteScreenDestination
 import com.smnotes.presentation.notesScreen.components.CustomTopAppBar
-import com.smnotes.presentation.utils.defaultModifier
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalFoundationApi::class)
 @ExperimentalAnimationApi
-@Destination(start=true)
+@Destination(start = true)
 @Composable
 fun NotesScreen(
     navigator: DestinationsNavigator,
     viewModel: NotesViewModel = hiltViewModel()
-) =  viewModel.run {
+) = viewModel.run {
     val state = viewModel.state.value
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
 
     Scaffold(
         topBar = {
-           CustomTopAppBar(title = "Notes"){
-               IconButton(
-                   onClick = {
-                       viewModel.onEvent(NotesEvent.ToggleOrderSection)
-                   },
-               ) {
-                   Icon(
-                       imageVector = Icons.Default.Sort,
-                       contentDescription = "Sort"
-                   )
-               }
-           }
+            CustomTopAppBar(title = "Notes") {
+                IconButton(
+                    onClick = {
+                        viewModel.onEvent(NotesEvent.ToggleOrderSection)
+                    },
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Sort,
+                        contentDescription = "Sort"
+                    )
+                }
+            }
         },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                 navigator.navigate(NoteScreenDestination(-1,-1))
+                    navigator.navigate(NoteScreenDestination(-1, -1))
                 },
                 backgroundColor = MaterialTheme.colors.primary
             ) {
@@ -83,14 +85,17 @@ fun NotesScreen(
             }
             Spacer(modifier = Modifier.height(16.dp))
             LazyColumn(modifier = Modifier.fillMaxSize()) {
-                items(state.notes) { note ->
+                items(state.notes, key = { it.id }) { note ->
                     NoteItem(
                         note = note,
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable {
                                 navigator.navigate(NoteScreenDestination(note.id, note.color))
-                            },
+                            }
+                            .animateItemPlacement(
+                                animationSpec = tween(500)
+                            ),
                         onDeleteClick = {
                             viewModel.onEvent(NotesEvent.DeleteNote(note))
                             scope.launch {
