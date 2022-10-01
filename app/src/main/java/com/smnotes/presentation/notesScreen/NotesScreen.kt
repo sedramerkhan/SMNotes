@@ -21,6 +21,7 @@ import com.smnotes.presentation.notesScreen.components.OrderSection
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.smnotes.presentation.destinations.NoteScreenDestination
 import com.smnotes.presentation.noteScreen.NoteScreen
+import com.smnotes.presentation.utils.defaultModifier
 import kotlinx.coroutines.launch
 
 @ExperimentalAnimationApi
@@ -49,8 +50,7 @@ fun NotesScreen(
     ) {
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
+                .defaultModifier(16.dp,16.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
