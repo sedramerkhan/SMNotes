@@ -5,7 +5,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.smnotes.domain.model.Note
 import com.smnotes.domain.usecase.NoteUseCases
@@ -13,6 +12,7 @@ import com.smnotes.domain.order.NoteOrder
 import com.smnotes.domain.order.OrderType
 import com.smnotes.presentation.NoteApp
 import com.smnotes.presentation.notesScreen.components.DrawerItems
+import com.smnotes.presentation.utils.snackbar.SnackbarType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
@@ -26,7 +26,7 @@ class NotesViewModel @Inject constructor(
     application: NoteApp,
 ) : AndroidViewModel(application) {
 
-     val application
+    val application
         get() = getApplication<NoteApp>()
 
     private val _state = mutableStateOf(NotesState())
@@ -38,6 +38,8 @@ class NotesViewModel @Inject constructor(
 
     private var getNotesJob: Job? = null
 
+    var snackbarType by mutableStateOf(SnackbarType.Normal)
+
     init {
         getNotes(NoteOrder.Date(OrderType.Descending))
     }
@@ -45,7 +47,7 @@ class NotesViewModel @Inject constructor(
     fun onEvent(event: NotesEvent) {
         when (event) {
             is NotesEvent.GetNotes -> {
-                    getNotesSelectedItemDrawer(state.value.noteOrder)
+                getNotesSelectedItemDrawer(state.value.noteOrder)
             }
             is NotesEvent.Order -> {
                 if (state.value.noteOrder::class == event.noteOrder::class &&
@@ -80,12 +82,13 @@ class NotesViewModel @Inject constructor(
         }
     }
 
-    private fun getNotesSelectedItemDrawer(noteOrder: NoteOrder){
+    private fun getNotesSelectedItemDrawer(noteOrder: NoteOrder) {
         if (selectedItemDrawer == DrawerItems.HOME)
             getNotes(noteOrder)
         else
             getImportantNotes(noteOrder)
     }
+
     private fun getNotes(noteOrder: NoteOrder) {
         getNotesJob?.cancel()
         getNotesJob = noteUseCases.getNotes(noteOrder)

@@ -113,7 +113,7 @@ fun ColorsGrid(
             ColorItem(
                 backgroundColor = color, borderColor =
                 if (selectedColor == colorInt) {
-                   Color.Black
+                    MaterialTheme.colors.surface
                 } else Color.Transparent
             ) {
                 onColorSelected(color)
@@ -132,10 +132,10 @@ fun ColorItem(
     Card(
         modifier = Modifier
             .size(50.dp)
-            .shadow(15.dp, CircleShape)
+            .shadow(1.dp, CircleShape)
             .clip(CircleShape)
             .border(
-                width = 3.dp,
+                width = 4.dp,
                 color = borderColor,
                 shape = CircleShape
             )

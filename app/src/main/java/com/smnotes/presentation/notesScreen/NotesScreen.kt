@@ -1,7 +1,6 @@
 package com.smnotes.presentation.notesScreen
 
 import androidx.compose.animation.*
-import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
@@ -13,10 +12,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Sort
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
@@ -26,6 +24,9 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.smnotes.presentation.destinations.NoteScreenDestination
 import com.smnotes.presentation.notesScreen.components.*
 import com.smnotes.presentation.utils.CustomFloatingActionButton
+import com.smnotes.presentation.utils.snackbar.NormalSnackbar
+import com.smnotes.presentation.utils.snackbar.SnackbarType
+import com.smnotes.presentation.utils.snackbar.UndoDeleteSnackbar
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
@@ -44,9 +45,14 @@ fun NotesScreen(
     val clipboardManager = LocalClipboardManager.current
 
     val drawerState = scaffoldState.drawerState
-
+        var seconds by remember{
+        mutableStateOf(4)
+    }
     Scaffold(
         scaffoldState = scaffoldState,
+        snackbarHost = {
+            scaffoldState.snackbarHostState
+        },
         topBar = {
             CustomTopAppBar(title = selectedItemDrawer.value,
                 navigationIcon = {
@@ -78,7 +84,7 @@ fun NotesScreen(
                 })
         },
         floatingActionButton = {
-            CustomFloatingActionButton(icon =Icons.Default.Add ) {
+            CustomFloatingActionButton(icon = Icons.Default.Add) {
                 navigator.navigate(NoteScreenDestination(-1, -1))
             }
         },
@@ -94,75 +100,104 @@ fun NotesScreen(
             }, isDark = application.isDark, toggleLightTheme = { application.toggleLightTheme() })
         }
     ) {
-
-        Column(
+        BoxWithConstraints(
             modifier = Modifier
                 .padding(16.dp)
         ) {
+            Column {
 
-            AnimatedVisibility(
-                visible = state.isOrderSectionVisible,
-                enter = fadeIn() + slideInVertically(),
-                exit = fadeOut() + slideOutVertically()
-            ) {
-                OrderSection(
-                    modifier = Modifier.fillMaxWidth(),
-                    noteOrder = state.noteOrder,
-                    onOrderChange = {
-                        onEvent(NotesEvent.Order(it))
-                    }
-                )
-            }
-            Spacer(modifier = Modifier.height(16.dp))
-            LazyColumn(modifier = Modifier.fillMaxSize()) {
-                items(state.notes, key = { it.id }) { note ->
-                    val dismissState = DismissState_Start_End(
-                        DismissedToStart = {
-                            onEvent(NotesEvent.DeleteNote(note))
-                            scope.launch {
-                                val result = scaffoldState.snackbarHostState.showSnackbar(
-                                    message = "Note deleted",
-                                    actionLabel = "Undo"
-                                )
-                                if (result == SnackbarResult.ActionPerformed) {
-                                    onEvent(NotesEvent.RestoreNote)
-                                }
-                            }
-                        },
-                        DismissedToEnd = {
-                            clipboardManager.setText(AnnotatedString(note.title + "\n" + note.content))
-                            scope.launch {
-                                scaffoldState.snackbarHostState.showSnackbar(
-                                    message = "Copied",
-                                )
-                            }
-                        })
-
-                    NoteItem(
-                        note = note,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                navigator.navigate(NoteScreenDestination(note.id, note.color))
-                            }
-                            .animateItemPlacement(
-                                animationSpec = tween(500)
-                            ),
-                        dismissInfo = DismissInfo(
-                            dismissState = dismissState,
-                            background = {
-                                SwipeBackground()
-                            }
-                        ),
-                        onImportantClick = {
-                            onEvent(NotesEvent.ImportantNote(note))
+                AnimatedVisibility(
+                    visible = state.isOrderSectionVisible,
+                    enter = fadeIn() + slideInVertically(),
+                    exit = fadeOut() + slideOutVertically()
+                ) {
+                    OrderSection(
+                        modifier = Modifier.fillMaxWidth(),
+                        noteOrder = state.noteOrder,
+                        onOrderChange = {
+                            onEvent(NotesEvent.Order(it))
                         }
                     )
-                    Spacer(modifier = Modifier.height(16.dp))
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+                LazyColumn(modifier = Modifier.fillMaxSize()) {
+                    items(state.notes, key = { it.id }) { note ->
+                        val dismissState = DismissState_Start_End(
+                            DismissedToStart = {
+                                snackbarType = SnackbarType.Delete
+                                onEvent(NotesEvent.DeleteNote(note))
+                                scope.launch {
+                                    seconds  =4
+                                    val result = scaffoldState.snackbarHostState.showSnackbar(
+                                        message = "Note deleted, Retrieve it in ",
+                                        actionLabel = "Retrieve"
+                                    )
+                                    if (result == SnackbarResult.ActionPerformed) {
+                                        onEvent(NotesEvent.RestoreNote)
+                                    }
+                                }
+                            },
+                            DismissedToEnd = {
+                                snackbarType = SnackbarType.Normal
+                                clipboardManager.setText(AnnotatedString(note.title + "\n" + note.content))
+                                scope.launch {
+                                    scaffoldState.snackbarHostState.showSnackbar(
+                                        message = "Copied",
+                                    )
+                                }
+                            })
+
+                        NoteItem(
+                            note = note,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    navigator.navigate(NoteScreenDestination(note.id, note.color))
+                                }
+                                .animateItemPlacement(
+                                    animationSpec = tween(500)
+                                ),
+                            dismissInfo = DismissInfo(
+                                dismissState = dismissState,
+                                background = {
+                                    SwipeBackground()
+                                }
+                            ),
+                            onImportantClick = {
+                                onEvent(NotesEvent.ImportantNote(note))
+                            }
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                    }
                 }
             }
-        }
+            var t by remember {
+                mutableStateOf(true)
+            }
 
+
+            if (snackbarType == SnackbarType.Normal) {
+                NormalSnackbar(
+                    snackbarHostState = scaffoldState.snackbarHostState,
+                    onDismiss = {
+                        scaffoldState.snackbarHostState.currentSnackbarData?.dismiss()
+                    },
+                    modifier = Modifier.align(Alignment.BottomCenter)
+                )
+            } else {
+               t= true
+                UndoDeleteSnackbar(
+                    snackbarHostState = scaffoldState.snackbarHostState,
+                    onPerformAction = {
+                        scaffoldState.snackbarHostState.currentSnackbarData?.performAction()
+                    },
+                    modifier = Modifier.align(Alignment.BottomCenter),
+                    seconds = seconds,
+                    downSec = {seconds -=1}
+                )
+            }
+
+        }
 
     }
 }

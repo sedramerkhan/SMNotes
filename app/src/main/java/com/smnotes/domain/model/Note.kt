@@ -16,8 +16,8 @@ data class Note(
     val id: Long = 0,
 ) {
     companion object {
-        val COLORS = listOf(White,RedOrange, LightGreen, Violet, BabyBlue, RedPink, Teal200, Purple200,Pink70,Cyan,Teal,Lime,
-            Color.LightGray,Pink20)
+        val COLORS = listOf(RedOrange, LightGreen, Violet, BabyBlue, RedPink, Teal200, Purple200,Pink70,Cyan,Teal,Lime,
+            Color.LightGray,Pink20,Green)
     }
 }
 
