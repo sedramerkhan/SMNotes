@@ -12,6 +12,10 @@ class NoteRepositoryImpl(
         return dao.getNotes()
     }
 
+    override fun getImportantNotes(): Flow<List<Note>> {
+        return dao.getImportantNotes()
+    }
+
     override suspend fun getNoteById(id: Long): Note? {
         return dao.getNoteById(id)
     }

@@ -1,13 +1,16 @@
 package com.smnotes.presentation.notesScreen
 
 import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.smnotes.domain.model.Note
 import com.smnotes.domain.usecase.NoteUseCases
 import com.smnotes.domain.order.NoteOrder
 import com.smnotes.domain.order.OrderType
+import com.smnotes.presentation.notesScreen.components.DrawerItems
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
@@ -23,6 +26,8 @@ class NotesViewModel @Inject constructor(
     private val _state = mutableStateOf(NotesState())
     val state: State<NotesState> = _state
 
+    var selectedItemDrawer by mutableStateOf(DrawerItems.HOME)
+
     private var recentlyDeletedNote: Note? = null
 
     private var getNotesJob: Job? = null
@@ -33,13 +38,16 @@ class NotesViewModel @Inject constructor(
 
     fun onEvent(event: NotesEvent) {
         when (event) {
+            is NotesEvent.GetNotes -> {
+                    getNotesSelectedItemDrawer(state.value.noteOrder)
+            }
             is NotesEvent.Order -> {
                 if (state.value.noteOrder::class == event.noteOrder::class &&
                     state.value.noteOrder.orderType == event.noteOrder.orderType
                 ) {
                     return
                 }
-                getNotes(event.noteOrder)
+               getImportantNotes(event.noteOrder)
             }
             is NotesEvent.DeleteNote -> {
                 viewModelScope.launch {
@@ -58,7 +66,7 @@ class NotesViewModel @Inject constructor(
                     isOrderSectionVisible = !state.value.isOrderSectionVisible
                 )
             }
-            is NotesEvent.ImportantNote ->{
+            is NotesEvent.ImportantNote -> {
                 viewModelScope.launch {
                     noteUseCases.addNote(event.note.copy(important = !event.note.important))
                 }
@@ -66,9 +74,27 @@ class NotesViewModel @Inject constructor(
         }
     }
 
+    private fun getNotesSelectedItemDrawer(noteOrder: NoteOrder){
+        if (selectedItemDrawer == DrawerItems.HOME)
+            getNotes(noteOrder)
+        else
+            getImportantNotes(noteOrder)
+    }
     private fun getNotes(noteOrder: NoteOrder) {
         getNotesJob?.cancel()
         getNotesJob = noteUseCases.getNotes(noteOrder)
+            .onEach { notes ->
+                _state.value = state.value.copy(
+                    notes = notes,
+                    noteOrder = noteOrder
+                )
+            }
+            .launchIn(viewModelScope)
+    }
+
+    private fun getImportantNotes(noteOrder: NoteOrder) {
+        getNotesJob?.cancel()
+        getNotesJob = noteUseCases.getImportantNotes(noteOrder)
             .onEach { notes ->
                 _state.value = state.value.copy(
                     notes = notes,

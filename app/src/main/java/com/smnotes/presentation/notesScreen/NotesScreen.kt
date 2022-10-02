@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.Sort
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
@@ -33,13 +34,14 @@ fun NotesScreen(
     navigator: DestinationsNavigator,
     viewModel: NotesViewModel = hiltViewModel()
 ) = viewModel.run {
-    val state = viewModel.state.value
+    val state = state.value
+
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
 
     val clipboardManager = LocalClipboardManager.current
 
-    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val drawerState = scaffoldState.drawerState
 
     Scaffold(
         scaffoldState = scaffoldState,
@@ -48,8 +50,7 @@ fun NotesScreen(
                 IconButton(
                     onClick = {
                         scope.launch {
-                            drawerState.open()
-//                           drawerState.animateTo(DrawerValue.Open,tween(500))
+                           drawerState.animateTo(DrawerValue.Open,tween(500))
                         }
                     },
                 ) {
@@ -61,7 +62,7 @@ fun NotesScreen(
             }) {
                 IconButton(
                     onClick = {
-                        viewModel.onEvent(NotesEvent.ToggleOrderSection)
+                        onEvent(NotesEvent.ToggleOrderSection)
                     },
                 ) {
                     Icon(
@@ -81,8 +82,13 @@ fun NotesScreen(
                 Icon(imageVector = Icons.Default.Add, contentDescription = "Add note")
             }
         },
+//        drawerBackgroundColor = Color.Transparent,
         drawerContent = {
-            Text("hello")
+            MainDrawer(selected = selectedItemDrawer, onItemSelected ={
+                if(selectedItemDrawer != it)
+                    selectedItemDrawer = it
+                onEvent(NotesEvent.GetNotes)
+            } )
         }
     ) {
         Column(
@@ -99,7 +105,7 @@ fun NotesScreen(
                     modifier = Modifier.fillMaxWidth(),
                     noteOrder = state.noteOrder,
                     onOrderChange = {
-                        viewModel.onEvent(NotesEvent.Order(it))
+                        onEvent(NotesEvent.Order(it))
                     }
                 )
             }
@@ -108,14 +114,14 @@ fun NotesScreen(
                 items(state.notes, key = { it.id }) { note ->
                     val dismissState = DismissState_Start_End(
                         DismissedToStart = {
-                            viewModel.onEvent(NotesEvent.DeleteNote(note))
+                            onEvent(NotesEvent.DeleteNote(note))
                             scope.launch {
                                 val result = scaffoldState.snackbarHostState.showSnackbar(
                                     message = "Note deleted",
                                     actionLabel = "Undo"
                                 )
                                 if (result == SnackbarResult.ActionPerformed) {
-                                    viewModel.onEvent(NotesEvent.RestoreNote)
+                                    onEvent(NotesEvent.RestoreNote)
                                 }
                             }
                         },
@@ -145,7 +151,7 @@ fun NotesScreen(
                             }
                         ),
                         onImportantClick = {
-                            viewModel.onEvent(NotesEvent.ImportantNote(note))
+                            onEvent(NotesEvent.ImportantNote(note))
                         }
                     )
                     Spacer(modifier = Modifier.height(16.dp))

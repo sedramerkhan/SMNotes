@@ -9,4 +9,5 @@ sealed class NotesEvent {
     data class ImportantNote(val note: Note): NotesEvent()
     object RestoreNote: NotesEvent()
     object ToggleOrderSection: NotesEvent()
+    object GetNotes : NotesEvent()
 }
