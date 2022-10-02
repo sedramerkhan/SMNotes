@@ -11,11 +11,15 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Flag
+import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,13 +31,15 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.ramcosta.composedestinations.annotation.Destination
 import com.smnotes.domain.model.Note
+import com.smnotes.domain.model.Note.Companion.COLORS
+import com.smnotes.presentation.noteScreen.components.ColorsDialog
 import com.smnotes.presentation.noteScreen.components.TransparentHintTextField
+import com.smnotes.presentation.utils.CustomFloatingActionButton
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -45,9 +51,9 @@ fun NoteScreen(
     noteId: Long,
     noteColor: Int,
     viewModel: NoteViewModel = hiltViewModel()
-) {
-    val titleState = viewModel.noteTitle.value
-    val contentState = viewModel.noteContent.value
+) = viewModel.run {
+    val titleState = noteTitle.value
+    val contentState = noteContent.value
 
     val scaffoldState = rememberScaffoldState()
 
@@ -60,9 +66,27 @@ fun NoteScreen(
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
+    if (colorDialogState) {
+        ColorsDialog(
+            onDismiss = { colorDialogState = false },
+            colors =COLORS,
+            selectedColor = viewModel.noteColor.value,
+            onColorSelected ={
+                scope.launch {
+                    noteBackgroundAnimatable.animateTo(
+                        targetValue =it,
+                        animationSpec = tween(
+                            durationMillis = 500
+                        )
+                    )
+                }
+                viewModel.onEvent(NoteEvent.ChangeColor(it.toArgb()))
+            }
+        )
+    }
     LaunchedEffect(key1 = true) {
-        viewModel.eventFlow.collectLatest { event ->
-            when(event) {
+        eventFlow.collectLatest { event ->
+            when (event) {
                 is NoteViewModel.UiEvent.ShowSnackbar -> {
                     scaffoldState.snackbarHostState.showSnackbar(
                         message = event.message
@@ -77,13 +101,22 @@ fun NoteScreen(
 
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                CustomFloatingActionButton(
+                    modifier = Modifier.size(45.dp),
+                    icon = Icons.Default.Palette,
+                    backgroundColor = MaterialTheme.colors.primary
+                ) {
+                   colorDialogState = true
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+                CustomFloatingActionButton(
+                    icon = Icons.Default.Save,
+
+                ) {
                     viewModel.onEvent(NoteEvent.SaveNote)
-                },
-                backgroundColor = MaterialTheme.colors.primary
-            ) {
-                Icon(imageVector = Icons.Default.Save, contentDescription = "Save note")
+                }
+
             }
         },
         scaffoldState = scaffoldState
@@ -92,44 +125,8 @@ fun NoteScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .background(noteBackgroundAnimatable.value)
-                .padding(16.dp)
+                .padding(vertical = 25.dp, horizontal = 16.dp)
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Note.noteColors.forEach { color ->
-                    val colorInt = color.toArgb()
-                    Box(
-                        modifier = Modifier
-                            .size(50.dp)
-                            .shadow(15.dp, CircleShape)
-                            .clip(CircleShape)
-                            .background(color)
-                            .border(
-                                width = 3.dp,
-                                color = if (viewModel.noteColor.value == colorInt) {
-                                    MaterialTheme.colors.background
-                                } else Color.Transparent,
-                                shape = CircleShape
-                            )
-                            .clickable {
-                                scope.launch {
-                                    noteBackgroundAnimatable.animateTo(
-                                        targetValue = color,
-                                        animationSpec = tween(
-                                            durationMillis = 500
-                                        )
-                                    )
-                                }
-                                viewModel.onEvent(NoteEvent.ChangeColor(colorInt))
-                            }
-                    )
-                }
-            }
-            Spacer(modifier = Modifier.height(16.dp))
             TransparentHintTextField(
                 text = titleState.text,
                 hint = titleState.hint,
@@ -159,15 +156,8 @@ fun NoteScreen(
                 },
                 textStyle = MaterialTheme.typography.body1,
                 modifier = Modifier.fillMaxHeight(),
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Done,
-                ),
-                keyboardActions = KeyboardActions(
-                    onDone = {
-                        keyboardController?.hide()
-                        focusManager.clearFocus()
-                    },
-                ),
+                keyboardOptions = KeyboardOptions(),
+                keyboardActions = KeyboardActions(),
             )
         }
     }

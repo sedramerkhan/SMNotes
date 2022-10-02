@@ -1,5 +1,6 @@
 package com.smnotes.domain.model
 
+import androidx.compose.ui.graphics.Color
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.smnotes.presentation.theme.*
@@ -15,7 +16,8 @@ data class Note(
     val id: Long = 0,
 ) {
     companion object {
-        val noteColors = listOf(RedOrange, LightGreen, Violet, BabyBlue, RedPink, Teal200, Purple200)
+        val COLORS = listOf(White,RedOrange, LightGreen, Violet, BabyBlue, RedPink, Teal200, Purple200,Pink70,Cyan,Teal,Lime,
+            Color.LightGray,Pink20)
     }
 }
 

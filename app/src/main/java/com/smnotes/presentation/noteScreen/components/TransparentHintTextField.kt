@@ -40,7 +40,8 @@ fun TransparentHintTextField(
         backgroundColor = Color.Transparent,
         focusedIndicatorColor = Color.Transparent,
         unfocusedIndicatorColor = Color.Transparent,
-        placeholderColor = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.disabled),
+            textColor = Color.Black,
+        placeholderColor = Color.Black.copy(alpha = ContentAlpha.disabled),
 //        cursorColor = MaterialTheme.colors.secondary
     ),
         keyboardOptions =keyboardOptions ,

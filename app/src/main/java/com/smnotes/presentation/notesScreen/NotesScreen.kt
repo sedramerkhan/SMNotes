@@ -25,6 +25,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.smnotes.presentation.destinations.NoteScreenDestination
 import com.smnotes.presentation.notesScreen.components.*
+import com.smnotes.presentation.utils.CustomFloatingActionButton
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
@@ -77,16 +78,8 @@ fun NotesScreen(
                 })
         },
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    navigator.navigate(NoteScreenDestination(-1, -1))
-                },
-                backgroundColor = MaterialTheme.colors.secondary
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add, contentDescription = "Add note",
-                    tint = Color.Black
-                )
+            CustomFloatingActionButton(icon =Icons.Default.Add ) {
+                navigator.navigate(NoteScreenDestination(-1, -1))
             }
         },
         drawerContent = {
