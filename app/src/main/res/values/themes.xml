@@ -2,6 +2,7 @@
 <resources>
 
     <style name="Theme.SMNotes" parent="android:Theme.Material.Light.NoActionBar">
-        <item name="android:statusBarColor">@color/white</item>
+        <item name="android:statusBarColor">@color/purple</item>
+        <item name="android:windowLightStatusBar">true</item>
     </style>
 </resources>

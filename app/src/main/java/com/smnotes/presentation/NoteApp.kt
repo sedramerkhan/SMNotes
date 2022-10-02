@@ -8,7 +8,7 @@ import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
 class NoteApp : Application(){
-    // should be saved in data store
+
     var isDark by mutableStateOf(false)
 
     fun toggleLightTheme(){
