@@ -22,18 +22,19 @@ import com.smnotes.R
 fun MainDrawer(
     selected: DrawerItems,
     onItemSelected: (DrawerItems) -> Unit,
+    isDark: Boolean,
+    toggleLightTheme: () -> Unit
 ) {
-    val round = 40.dp
     Surface(
         modifier = Modifier.fillMaxWidth(),
-//        shape = RoundedCornerShape(topEnd = round, bottomEnd = round)
     ) {
         Column(
             modifier = Modifier.padding(top = 60.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             TopDrawerView()
-            DrawerItemsView(selected = selected, onItemSelected = onItemSelected)
+            DrawerItemsView(isDark = isDark, selected = selected, onItemSelected = onItemSelected)
+            Switch(isDark = isDark, toggleLightTheme = toggleLightTheme)
         }
     }
 }
@@ -41,45 +42,51 @@ fun MainDrawer(
 
 @Composable
 fun TopDrawerView() {
-    Card( modifier = Modifier.clip(CircleShape)){
+    Card(modifier = Modifier.clip(CircleShape)) {
         Image(
-           modifier = Modifier.size(150.dp) ,
+            modifier = Modifier.size(150.dp),
             painter = painterResource(id = R.drawable.img), contentDescription = null,
 
             )
     }
 
-    Divider(Modifier.fillMaxWidth(.8f).padding(top=8.dp,bottom=16.dp))
+    Divider(
+        Modifier
+            .fillMaxWidth(.8f)
+            .padding(top = 8.dp, bottom = 16.dp)
+    )
 
 }
 
 @Composable
 fun DrawerItemsView(
+    isDark: Boolean,
     selected: DrawerItems,
     onItemSelected: (DrawerItems) -> Unit,
 ) {
     getDrawerItems().forEach {
-        val color = MaterialTheme.colors.primary.copy(alpha = 0.2f)
-        val color2 = MaterialTheme.colors.primary
+        val backgroundColor = MaterialTheme.colors.primary.copy(alpha = 0.25f)
+        val color2 =
+            if (selected == it && !isDark)
+                MaterialTheme.colors.primary
+            else MaterialTheme.colors.onSurface.copy(alpha = if (isDark) .8f else .6f)
         val round = RoundedCornerShape(20.dp)
         val width =
             animateDpAsState(
                 targetValue = if (selected == it) 28.dp else 2.dp, animationSpec = tween(
-                    durationMillis = 500,
+                    durationMillis = 200,
                     easing = LinearEasing,
-//                        delayMillis = 500
                 )
             )
         Box(
             Modifier
                 .fillMaxWidth(.9f)
                 .clickable { onItemSelected(it) }
-//                    .background(backgroundColor.value)
         ) {
             Box(
                 Modifier
                     .matchParentSize()
-                    .border(width.value, color, round)
+                    .border(width.value, backgroundColor, round)
             ) {
             }
             Row(
@@ -96,5 +103,34 @@ fun DrawerItemsView(
 
         }
         Spacer(Modifier.height(16.dp))
+    }
+}
+
+@Composable
+fun Switch(isDark: Boolean, toggleLightTheme: () -> Unit) {
+    Divider(
+        Modifier
+            .fillMaxWidth(.8f)
+            .padding(top = 8.dp, bottom = 16.dp)
+    )
+    Row(
+        modifier = Modifier.fillMaxWidth(.9f),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    )
+    {
+        val on_off = if (isDark) "off" else "on"
+        Text(
+            text = "Turn $on_off dark mode",
+            style = MaterialTheme.typography.button,
+            color = MaterialTheme.colors.onSurface
+        )
+        Switch(
+            checked = isDark,
+            onCheckedChange = { toggleLightTheme() },
+            colors = SwitchDefaults.colors(
+
+            )
+        )
     }
 }

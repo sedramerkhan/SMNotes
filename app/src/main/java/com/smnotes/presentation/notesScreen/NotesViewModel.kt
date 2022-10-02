@@ -4,12 +4,14 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.smnotes.domain.model.Note
 import com.smnotes.domain.usecase.NoteUseCases
 import com.smnotes.domain.order.NoteOrder
 import com.smnotes.domain.order.OrderType
+import com.smnotes.presentation.NoteApp
 import com.smnotes.presentation.notesScreen.components.DrawerItems
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -20,8 +22,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NotesViewModel @Inject constructor(
-    private val noteUseCases: NoteUseCases
-) : ViewModel() {
+    private val noteUseCases: NoteUseCases,
+    application: NoteApp,
+) : AndroidViewModel(application) {
+
+     val application
+        get() = getApplication<NoteApp>()
 
     private val _state = mutableStateOf(NotesState())
     val state: State<NotesState> = _state
@@ -47,7 +53,7 @@ class NotesViewModel @Inject constructor(
                 ) {
                     return
                 }
-               getImportantNotes(event.noteOrder)
+                getNotesSelectedItemDrawer(event.noteOrder)
             }
             is NotesEvent.DeleteNote -> {
                 viewModelScope.launch {

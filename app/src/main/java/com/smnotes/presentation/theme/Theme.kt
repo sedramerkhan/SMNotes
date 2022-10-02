@@ -1,11 +1,10 @@
 package com.smnotes.presentation.theme
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
@@ -21,11 +20,11 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @SuppressLint("ConflictingOnColor")
 private val LightThemeColors = lightColors(
-    primary = Pink50,
+    primary = Purple50,
     primaryVariant = Purple20,
     onPrimary = Black2,
-    secondary = Pink20,
-    secondaryVariant = Color.White,
+    secondary = Pink50,
+    secondaryVariant = Pink50,
     onSecondary = Color.Black,
     error = RedErrorDark,
     onError = RedErrorLight,
@@ -36,11 +35,11 @@ private val LightThemeColors = lightColors(
 )
 
 private val DarkThemeColors = darkColors(
-    primary = Pink50,
+    primary = Purple50,
     primaryVariant = Color.White,
     onPrimary = Color.White,
-    secondary = Pink20,
-    secondaryVariant = Color.White,
+    secondary = Pink50,
+    secondaryVariant = Pink50,
     onSecondary = Color.White,
     error = RedErrorLight,
     background = Color.Black,
@@ -48,7 +47,6 @@ private val DarkThemeColors = darkColors(
     surface = Black1,
     onSurface = Color.White,
 )
-
 
 
 @Composable
@@ -59,7 +57,7 @@ fun SMNotesTheme(
 
     MaterialTheme(
         colors = if (darkTheme) DarkThemeColors else LightThemeColors,
-       typography = LoraTypography,
+        typography = LoraTypography,
         shapes = Shapes
     ) {
         val systemUiController = rememberSystemUiController()
@@ -68,15 +66,21 @@ fun SMNotesTheme(
             systemUiController.statusBarDarkContentEnabled = !darkTheme
             systemUiController.navigationBarDarkContentEnabled = !darkTheme
         }
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(color = MaterialTheme.colors.surface).padding(bottom = 45.dp)
+        //the first surface is for controlling navigation bar color
+        Surface(
+            modifier = Modifier.fillMaxSize()
         ) {
-            CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
-                content()
+            Surface(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(bottom = 45.dp),
+            ) {
+                CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+                    content()
+                }
             }
         }
+
     }
 }
 

@@ -1,6 +1,7 @@
 package com.smnotes.presentation.notesScreen
 
 import androidx.compose.animation.*
+import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
@@ -28,7 +29,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @ExperimentalAnimationApi
-@Destination(start = true)
+@Destination
 @Composable
 fun NotesScreen(
     navigator: DestinationsNavigator,
@@ -46,51 +47,61 @@ fun NotesScreen(
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = {
-            CustomTopAppBar(title = "Notes", navigationIcon = {
-                IconButton(
-                    onClick = {
-                        scope.launch {
-                           drawerState.animateTo(DrawerValue.Open,tween(500))
-                        }
-                    },
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Menu,
-                        contentDescription = "Menu"
-                    )
-                }
-            }) {
-                IconButton(
-                    onClick = {
-                        onEvent(NotesEvent.ToggleOrderSection)
-                    },
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Sort,
-                        contentDescription = "Sort"
-                    )
-                }
-            }
+            CustomTopAppBar(title = selectedItemDrawer.value,
+                navigationIcon = {
+                    IconButton(
+                        onClick = {
+                            scope.launch {
+                                drawerState.animateTo(DrawerValue.Open, tween(500))
+                            }
+                        },
+                    ) {
+                        Icon(
+                            modifier = Modifier.padding(end = 4.dp),
+                            imageVector = Icons.Default.Menu,
+                            contentDescription = "Menu"
+                        )
+                    }
+                },
+                actions = {
+                    IconButton(
+                        onClick = {
+                            onEvent(NotesEvent.ToggleOrderSection)
+                        },
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Sort,
+                            contentDescription = "Sort"
+                        )
+                    }
+                })
         },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
                     navigator.navigate(NoteScreenDestination(-1, -1))
                 },
-                backgroundColor = MaterialTheme.colors.primary
+                backgroundColor = MaterialTheme.colors.secondary
             ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "Add note")
+                Icon(
+                    imageVector = Icons.Default.Add, contentDescription = "Add note",
+                    tint = Color.Black
+                )
             }
         },
-//        drawerBackgroundColor = Color.Transparent,
         drawerContent = {
-            MainDrawer(selected = selectedItemDrawer, onItemSelected ={
-                if(selectedItemDrawer != it)
+            MainDrawer(selected = selectedItemDrawer, onItemSelected = {
+                if (selectedItemDrawer != it) {
                     selectedItemDrawer = it
-                onEvent(NotesEvent.GetNotes)
-            } )
+                    onEvent(NotesEvent.GetNotes)
+                }
+                scope.launch {
+                    drawerState.animateTo(DrawerValue.Closed, tween(800))
+                }
+            }, isDark = application.isDark, toggleLightTheme = { application.toggleLightTheme() })
         }
     ) {
+
         Column(
             modifier = Modifier
                 .padding(16.dp)
@@ -158,5 +169,7 @@ fun NotesScreen(
                 }
             }
         }
+
+
     }
 }
