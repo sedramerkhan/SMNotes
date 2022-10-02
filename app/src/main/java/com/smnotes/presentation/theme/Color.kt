@@ -20,6 +20,8 @@ val LightGreen = Color(0xffe7ed9b)
 
 val Pink20 = Color(0xFFF1D4D4)
 val Pink50 = Color(0xFFFFA3C1)
+val Pink60 = Color(0xFFFF78AC)
+val Pink70 = Color(0xFFFF0055)//ff78a
 val Purple20 = Color(0xFFC060A1)
 val Purple50 = Color(0xFF480255)//FF6A097D
 
