@@ -23,6 +23,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.smnotes.presentation.destinations.NoteScreenDestination
 import com.smnotes.presentation.notesScreen.components.*
+import com.smnotes.presentation.theme.Gold
 import com.smnotes.presentation.utils.CustomFloatingActionButton
 import com.smnotes.presentation.utils.snackbar.NormalSnackbar
 import com.smnotes.presentation.utils.snackbar.SnackbarType
@@ -147,8 +148,18 @@ fun NotesScreen(
                                 }
                             })
 
+                        var startAnimation by remember { mutableStateOf(note.important) }
+
+                        val animateColor = animateColorAsState(
+                            targetValue = if (startAnimation) Gold else MaterialTheme.colors.background,
+                            animationSpec = tween(
+                                durationMillis = 500
+                            )
+                        )
+
                         NoteItem(
                             note = note,
+                            animateColor= animateColor.value,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clickable {
@@ -165,16 +176,13 @@ fun NotesScreen(
                             ),
                             onImportantClick = {
                                 onEvent(NotesEvent.ImportantNote(note))
+                                startAnimation =!startAnimation
                             }
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                     }
                 }
             }
-            var t by remember {
-                mutableStateOf(true)
-            }
-
 
             if (snackbarType == SnackbarType.Normal) {
                 NormalSnackbar(
@@ -185,7 +193,7 @@ fun NotesScreen(
                     modifier = Modifier.align(Alignment.BottomCenter)
                 )
             } else {
-               t= true
+
                 UndoDeleteSnackbar(
                     snackbarHostState = scaffoldState.snackbarHostState,
                     onPerformAction = {

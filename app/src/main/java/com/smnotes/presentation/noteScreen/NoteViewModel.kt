@@ -41,6 +41,9 @@ class NoteViewModel @Inject constructor(
     private val _noteColor = mutableStateOf(Note.COLORS.random().toArgb())
     val noteColor: State<Int> = _noteColor
 
+    private val _noteImportant = mutableStateOf(false)
+    val noteImportant: State<Boolean> = _noteImportant
+
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
@@ -61,6 +64,7 @@ class NoteViewModel @Inject constructor(
                             text = note.content,
                         )
                         _noteColor.value = note.color
+                        _noteImportant.value = note.important
                     }
                 }
             }
@@ -69,6 +73,9 @@ class NoteViewModel @Inject constructor(
 
     fun onEvent(event: NoteEvent) {
         when(event) {
+            is NoteEvent.SetImportant -> {
+                _noteImportant.value = !noteImportant.value
+            }
             is NoteEvent.EnteredTitle -> {
                 _noteTitle.value = noteTitle.value.copy(
                     text = event.value
@@ -91,6 +98,7 @@ class NoteViewModel @Inject constructor(
                                 content = noteContent.value.text,
                                 timestamp = System.currentTimeMillis(),
                                 color = noteColor.value,
+                                important =  noteImportant.value,
                                 id = currentNoteId
                             )
                         )

@@ -1,7 +1,5 @@
 package com.smnotes.presentation.notesScreen.components
 
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -22,27 +20,17 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.ColorUtils
 import com.smnotes.domain.model.Note
-import com.smnotes.presentation.theme.Gold
-
-
 
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun NoteItem(
     note: Note,
+    animateColor: Color,
     modifier: Modifier = Modifier,
     dismissInfo: DismissInfo,
     onImportantClick: () -> Unit,
 ) {
-    var startAnimation by remember { mutableStateOf(note.important) }
-
-    val animateColor = animateColorAsState(
-        targetValue = if (startAnimation) Gold else MaterialTheme.colors.background,
-        animationSpec = tween(
-            durationMillis = 500
-        )
-    )
 
     SwipeToDismiss(
         modifier = modifier,
@@ -58,9 +46,9 @@ fun NoteItem(
                     icon1 = Icons.Default.Star,
                     onClick1 = {
                         onImportantClick()
-                        startAnimation = !startAnimation
+//                        startAnimation = !startAnimation
                     },
-                    animateColor = animateColor.value,
+                    animateColor = animateColor,
                 )
             }
 
@@ -138,9 +126,9 @@ fun NoteIcons(
     onClick1: () -> Unit,
     animateColor: Color,
 ) {
-    Row(modifier = modifier) {
         IconButton(
             onClick = onClick1,
+            modifier = modifier,
         ) {
             Icon(
                 imageVector = icon1,
@@ -148,5 +136,4 @@ fun NoteIcons(
                 tint = animateColor
             )
         }
-    }
 }

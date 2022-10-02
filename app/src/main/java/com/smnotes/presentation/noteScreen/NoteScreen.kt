@@ -1,6 +1,7 @@
 package com.smnotes.presentation.noteScreen
 
 import androidx.compose.animation.Animatable
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -10,10 +11,8 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Save
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -31,6 +30,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.smnotes.domain.model.Note.Companion.COLORS
 import com.smnotes.presentation.noteScreen.components.ColorsDialog
 import com.smnotes.presentation.noteScreen.components.TransparentHintTextField
+import com.smnotes.presentation.theme.Gold
 import com.smnotes.presentation.utils.CustomFloatingActionButton
 import com.smnotes.presentation.utils.snackbar.NormalSnackbar
 import kotlinx.coroutines.flow.collectLatest
@@ -58,6 +58,17 @@ fun NoteScreen(
     val scope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
+    var startAnimation by remember { mutableStateOf(noteImportant) }
+
+    val animateColor = animateColorAsState(
+        targetValue = if (startAnimation.value) Gold else Color.Black,
+        animationSpec = tween(
+            durationMillis = 500
+        )
+    )
+
+
+
 
     if (colorDialogState) {
         ColorsDialog(
@@ -73,7 +84,7 @@ fun NoteScreen(
                         )
                     )
                 }
-                viewModel.onEvent(NoteEvent.ChangeColor(it.toArgb()))
+                onEvent(NoteEvent.ChangeColor(it.toArgb()))
             }
         )
     }
@@ -111,7 +122,7 @@ fun NoteScreen(
                     icon = Icons.Default.Save,
 
                     ) {
-                    viewModel.onEvent(NoteEvent.SaveNote)
+                    onEvent(NoteEvent.SaveNote)
                 }
 
             }
@@ -124,12 +135,17 @@ fun NoteScreen(
                 .background(noteBackgroundAnimatable.value)
                 .padding(vertical = 25.dp, horizontal = 16.dp)
         ) {
-            Column {
+            Column(Modifier.padding(top = 16.dp)) {
+                
+               ImportantRow(animateColor.value) {
+                   onEvent(NoteEvent.SetImportant)
+
+               }
                 TransparentHintTextField(
                     text = titleState.text,
                     hint = titleState.hint,
                     onValueChange = {
-                        viewModel.onEvent(NoteEvent.EnteredTitle(it))
+                        onEvent(NoteEvent.EnteredTitle(it))
                     },
                     singleLine = true,
                     textStyle = MaterialTheme.typography.h3,
@@ -150,7 +166,7 @@ fun NoteScreen(
                     text = contentState.text,
                     hint = contentState.hint,
                     onValueChange = {
-                        viewModel.onEvent(NoteEvent.EnteredContent(it))
+                        onEvent(NoteEvent.EnteredContent(it))
                     },
                     textStyle = MaterialTheme.typography.body1,
                     modifier = Modifier.fillMaxHeight(),
@@ -167,4 +183,35 @@ fun NoteScreen(
             )
         }
     }
+}
+
+
+@Composable
+fun ImportantRow(
+    animateColor : Color,
+    onClick : () -> Unit
+){
+
+    Row(
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+        verticalAlignment = Alignment.CenterVertically, 
+        horizontalArrangement = Arrangement.SpaceBetween
+    ){
+        Text(
+            text = "Mark as Important",
+            style = MaterialTheme.typography.h4,
+            color = Color.Black
+        )
+
+        IconButton(
+            onClick = onClick,
+        ) {
+            Icon(
+                imageVector = Icons.Default.Star,
+                contentDescription = "important note",
+                tint = animateColor
+            )
+        }
+    }
+
 }
