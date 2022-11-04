@@ -19,7 +19,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 
 @Composable
-fun TransparentHintTextField(
+fun TransparentTextField(
     text: String,
     hint: String,
     modifier: Modifier = Modifier,

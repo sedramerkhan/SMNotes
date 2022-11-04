@@ -58,7 +58,7 @@ fun ColorsDialog(
         onDismissRequest = {
             scope.launch {
             startAnimation = false
-            delay(200)
+            delay(300)
             onDismiss()
         } },
         properties = DialogProperties(usePlatformDefaultWidth = false) //full screen dialog
