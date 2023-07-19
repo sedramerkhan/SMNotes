@@ -24,6 +24,7 @@ class MainActivity : ComponentActivity() {
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
         )
+        window.setSoftInputMode( WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
         setContent {
             SMNotesTheme(application.isDark) {
                 DestinationsNavHost(navGraph = NavGraphs.root)
