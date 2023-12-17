@@ -12,7 +12,7 @@ class FakeNoteRepository : NoteRepository {
     }
 
     override fun getImportantNotes(): Flow<List<Note>> {
-        return flow { notes.filter { it.important } }
+        return flow { emit(notes.filter { it.important } )}
     }
 
     override suspend fun getNoteById(id: Long): Note? {
