@@ -24,6 +24,6 @@ class FakeNoteRepository : NoteRepository {
     }
 
     override suspend fun deleteNote(note: Note) {
-        notes.add(note)
+        notes.remove(note)
     }
 }
