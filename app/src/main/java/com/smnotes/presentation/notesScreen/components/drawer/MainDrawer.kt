@@ -1,9 +1,10 @@
-package com.smnotes.presentation.notesScreen.components
+package com.smnotes.presentation.notesScreen.components.drawer
 
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -80,17 +81,11 @@ fun DrawerItemsView(
             )
         Box(
             Modifier
-                .fillMaxWidth(.9f)
+                .fillMaxWidth(.9f).border(width.value, backgroundColor, round)
                 .clickable { onItemSelected(it) }
         ) {
-            Box(
-                Modifier
-                    .matchParentSize()
-                    .border(width.value, backgroundColor, round)
-            ) {
-            }
             Row(
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(imageVector = it.icon, contentDescription = it.value, tint = color2)

@@ -23,6 +23,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.smnotes.presentation.destinations.NoteScreenDestination
 import com.smnotes.presentation.notesScreen.components.*
+import com.smnotes.presentation.notesScreen.components.drawer.MainDrawer
 import com.smnotes.presentation.theme.Gold
 import com.smnotes.presentation.utils.CustomFloatingActionButton
 import com.smnotes.presentation.utils.snackbar.NormalSnackbar
@@ -46,7 +47,7 @@ fun NotesScreen(
     val clipboardManager = LocalClipboardManager.current
 
     val drawerState = scaffoldState.drawerState
-        var seconds by remember{
+    var seconds by remember {
         mutableStateOf(4)
     }
     Scaffold(
@@ -103,6 +104,7 @@ fun NotesScreen(
     ) {
         BoxWithConstraints(
             modifier = Modifier
+                .padding(it)
                 .padding(16.dp)
         ) {
             Column {
@@ -128,7 +130,7 @@ fun NotesScreen(
                                 snackbarType = SnackbarType.Delete
                                 onEvent(NotesEvent.DeleteNote(note))
                                 scope.launch {
-                                    seconds  =4
+                                    seconds = 4
                                     val result = scaffoldState.snackbarHostState.showSnackbar(
                                         message = "Note deleted, Retrieve it in ",
                                         actionLabel = "Retrieve"
@@ -159,7 +161,7 @@ fun NotesScreen(
 
                         NoteItem(
                             note = note,
-                            animateColor= animateColor.value,
+                            animateColor = animateColor.value,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clickable {
@@ -176,7 +178,7 @@ fun NotesScreen(
                             ),
                             onImportantClick = {
                                 onEvent(NotesEvent.ImportantNote(note))
-                                startAnimation =!startAnimation
+                                startAnimation = !startAnimation
                             }
                         )
                         Spacer(modifier = Modifier.height(16.dp))
@@ -201,7 +203,7 @@ fun NotesScreen(
                     },
                     modifier = Modifier.align(Alignment.BottomCenter),
                     seconds = seconds,
-                    downSec = {seconds -=1}
+                    downSec = { seconds -= 1 }
                 )
             }
 

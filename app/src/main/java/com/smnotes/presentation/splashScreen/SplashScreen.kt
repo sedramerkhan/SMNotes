@@ -50,7 +50,7 @@ fun SplashScreen(
             navigator.navigate(NotesScreenDestination)
         }
 
-        LottieAnimation(compositionResult.value, progress,)
+        LottieAnimation(compositionResult.value, progress)
 
         Image(painterResource(id = R.drawable.smnotes_purple), "")
 

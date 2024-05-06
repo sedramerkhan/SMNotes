@@ -29,6 +29,7 @@ class NoteViewModel @Inject constructor(
         hint = "Enter title..."
     )
     )
+
     val noteTitle: State<NoteTextFieldState> = _noteTitle
 
     private val _noteContent = mutableStateOf(

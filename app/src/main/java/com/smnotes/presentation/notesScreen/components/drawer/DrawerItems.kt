@@ -1,4 +1,4 @@
-package com.smnotes.presentation.notesScreen.components
+package com.smnotes.presentation.notesScreen.components.drawer
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
