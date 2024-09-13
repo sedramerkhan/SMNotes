@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Sort
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Sort
@@ -57,7 +58,6 @@ fun NotesScreen(
         },
         topBar = {
             CustomTopAppBar(title = selectedItemDrawer.value,
-                modifier = Modifier.navigationBarsPadding(),
                 navigationIcon = {
                     IconButton(
                         onClick = {
@@ -80,7 +80,7 @@ fun NotesScreen(
                         },
                     ) {
                         Icon(
-                            imageVector = Icons.Default.Sort,
+                            imageVector = Icons.AutoMirrored.Filled.Sort,
                             contentDescription = "Sort"
                         )
                     }
@@ -164,17 +164,18 @@ fun NotesScreen(
                             ), label = ""
                         )
 
-                        Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                navigator.navigate(NoteScreenDestination(note.id, note.color))
-                            }
+
                         NoteItem(
                             note = note,
                             animateColor = animateColor.value,
-                            modifier = Modifier.animateItem(
-                                placementSpec = tween(500)
-                            ),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    navigator.navigate(NoteScreenDestination(note.id, note.color))
+                                }
+                                .animateItemPlacement(
+                                    tween(500)
+                                ),
                             dismissInfo = DismissInfo(
                                 dismissState = dismissState,
                                 background = {

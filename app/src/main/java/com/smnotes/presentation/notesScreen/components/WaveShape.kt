@@ -9,8 +9,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.smnotes.presentation.theme.SMNotesTheme
 
 
 val ColoredWave = @Composable { modifier: Modifier, round1: Dp, round2: Dp ->
@@ -58,8 +60,8 @@ fun WaveShape() {
     val randNum = 11
     val num = (screenWidth / (width.value - randNum)).toInt()
     val remainWidth = screenWidth % (width.value - randNum)
-    val paddingStart = { num: Int ->
-        width.times(num) - (randNum * num).dp
+    val paddingStart = { n: Int ->
+        width.times(n) - (randNum * n).dp
     }
     Box(
         Modifier
@@ -82,7 +84,7 @@ fun WaveShape() {
     }
 }
 
-@androidx.compose.ui.tooling.preview.Preview
+@Preview
 @Composable
 fun WaveShapePreview() {
     WaveShape()
