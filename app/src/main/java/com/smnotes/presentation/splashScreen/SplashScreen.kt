@@ -7,7 +7,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -37,20 +36,18 @@ fun SplashScreen(
         val compositionResult: LottieCompositionResult =
             rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.lottie_logo)) //it can be stored in asset too
 
-        val progress by animateLottieCompositionAsState(
-            compositionResult.value,
-            isPlaying = true,
-            iterations = 3,
-            speed = 1.5f
-        )
-        LaunchedEffect(key1 =true ) {
+        LaunchedEffect(key1 = true) {
             delay(3200)
-            Log.i("lottie","hello after 1500")
+            Log.i("lottie", "hello after 1500")
             navigator.popBackStack()
             navigator.navigate(NotesScreenDestination)
         }
 
-        LottieAnimation(compositionResult.value, progress)
+        LottieAnimation(
+            compositionResult.value, isPlaying = true,
+            iterations = 3,
+            speed = 1.5f
+        )
 
         Image(painterResource(id = R.drawable.smnotes_purple), "")
 

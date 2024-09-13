@@ -4,6 +4,7 @@ import androidx.compose.animation.Animatable
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -14,13 +15,12 @@ import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
@@ -35,8 +35,7 @@ import com.smnotes.presentation.utils.CustomFloatingActionButton
 import com.smnotes.presentation.utils.snackbar.NormalSnackbar
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterialApi::class)
+@OptIn( ExperimentalMaterialApi::class)
 @Destination
 @Composable
 fun NoteScreen(
@@ -57,7 +56,6 @@ fun NoteScreen(
     }
     val scope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
-    val keyboardController = LocalSoftwareKeyboardController.current
     var startAnimation by remember { mutableStateOf(noteImportant) }
 
     val animateColor = animateColorAsState(
@@ -104,12 +102,15 @@ fun NoteScreen(
     }
 
     Scaffold(
+        modifier = Modifier.imePadding() ,
         scaffoldState = scaffoldState,
         snackbarHost = {
             scaffoldState.snackbarHostState
         },
         floatingActionButton = {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(
+                modifier = Modifier.navigationBarsPadding(),
+                horizontalAlignment = Alignment.CenterHorizontally) {
                 CustomFloatingActionButton(
                     modifier = Modifier.size(45.dp),
                     icon = Icons.Default.Palette,
@@ -129,10 +130,15 @@ fun NoteScreen(
         },
         ) {
 
-        BoxWithConstraints(
+        Box(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxSize().padding(it)
+                .pointerInput(Unit) {
+                    detectTapGestures(onTap = { focusManager.clearFocus() })
+                }
+
                 .background(noteBackgroundAnimatable.value)
+                .navigationBarsPadding()
                 .padding(vertical = 25.dp, horizontal = 16.dp)
         ) {
             Column(Modifier.padding(top = 16.dp).fillMaxSize()) {

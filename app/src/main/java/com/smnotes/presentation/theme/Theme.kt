@@ -1,20 +1,15 @@
 package com.smnotes.presentation.theme
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
-import androidx.compose.ui.unit.dp
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 
@@ -66,19 +61,8 @@ fun SMNotesTheme(
             systemUiController.statusBarDarkContentEnabled = !darkTheme
             systemUiController.navigationBarDarkContentEnabled = !darkTheme
         }
-        //the first surface is for controlling navigation bar color
-        Surface(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            Surface(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(bottom = 45.dp),
-            ) {
-                CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
-                    content()
-                }
-            }
+        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+            content()
         }
 
     }

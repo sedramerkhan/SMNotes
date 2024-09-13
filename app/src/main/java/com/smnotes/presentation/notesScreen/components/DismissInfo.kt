@@ -8,10 +8,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
-import com.smnotes.presentation.notesScreen.NotesEvent
-import kotlinx.coroutines.launch
 
 data class DismissInfo @OptIn(ExperimentalMaterialApi::class) constructor(
     val dismissState: DismissState,
@@ -23,7 +20,6 @@ data class DismissInfo @OptIn(ExperimentalMaterialApi::class) constructor(
 )
 
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SwipeBackground() {
     Row(
@@ -48,13 +44,13 @@ fun SwipeBackground() {
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun DismissState_Start_End(DismissedToStart : ()-> Unit, DismissedToEnd :() -> Unit) = rememberDismissState {
+fun dismissStateStartEnd(dismissedToStart : ()-> Unit, dismissedToEnd :() -> Unit) = rememberDismissState {
     when (it) {
         DismissValue.DismissedToStart -> {
-           DismissedToStart()
+           dismissedToStart()
         }
         DismissValue.DismissedToEnd -> {
-          DismissedToEnd()
+          dismissedToEnd()
         }
         else -> {
         }

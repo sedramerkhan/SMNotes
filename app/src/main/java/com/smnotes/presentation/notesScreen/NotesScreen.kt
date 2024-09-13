@@ -57,11 +57,12 @@ fun NotesScreen(
         },
         topBar = {
             CustomTopAppBar(title = selectedItemDrawer.value,
+                modifier = Modifier.navigationBarsPadding(),
                 navigationIcon = {
                     IconButton(
                         onClick = {
                             scope.launch {
-                                drawerState.animateTo(DrawerValue.Open, tween(500))
+                                drawerState.open()
                             }
                         },
                     ) {
@@ -86,7 +87,10 @@ fun NotesScreen(
                 })
         },
         floatingActionButton = {
-            CustomFloatingActionButton(icon = Icons.Default.Add) {
+            CustomFloatingActionButton(
+                modifier = Modifier.navigationBarsPadding(),
+                icon = Icons.Default.Add
+            ) {
                 navigator.navigate(NoteScreenDestination(-1, -1))
             }
         },
@@ -97,15 +101,16 @@ fun NotesScreen(
                     onEvent(NotesEvent.GetNotes)
                 }
                 scope.launch {
-                    drawerState.animateTo(DrawerValue.Closed, tween(800))
+                    drawerState.close()
                 }
             }, isDark = application.isDark, toggleLightTheme = { application.toggleLightTheme() })
         }
     ) {
-        BoxWithConstraints(
+        Box(
             modifier = Modifier
                 .padding(it)
-                .padding(16.dp)
+                .navigationBarsPadding()
+                .padding(horizontal = 16.dp)
         ) {
             Column {
 
@@ -125,8 +130,8 @@ fun NotesScreen(
                 Spacer(modifier = Modifier.height(16.dp))
                 LazyColumn(modifier = Modifier.fillMaxSize()) {
                     items(state.notes, key = { it.id }) { note ->
-                        val dismissState = DismissState_Start_End(
-                            DismissedToStart = {
+                        val dismissState = dismissStateStartEnd(
+                            dismissedToStart = {
                                 snackbarType = SnackbarType.Delete
                                 onEvent(NotesEvent.DeleteNote(note))
                                 scope.launch {
@@ -140,7 +145,7 @@ fun NotesScreen(
                                     }
                                 }
                             },
-                            DismissedToEnd = {
+                            dismissedToEnd = {
                                 snackbarType = SnackbarType.Normal
                                 clipboardManager.setText(AnnotatedString(note.title + "\n" + note.content))
                                 scope.launch {
@@ -156,20 +161,20 @@ fun NotesScreen(
                             targetValue = if (startAnimation) Gold else MaterialTheme.colors.background,
                             animationSpec = tween(
                                 durationMillis = 500
-                            )
+                            ), label = ""
                         )
 
+                        Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                navigator.navigate(NoteScreenDestination(note.id, note.color))
+                            }
                         NoteItem(
                             note = note,
                             animateColor = animateColor.value,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable {
-                                    navigator.navigate(NoteScreenDestination(note.id, note.color))
-                                }
-                                .animateItemPlacement(
-                                    animationSpec = tween(500)
-                                ),
+                            modifier = Modifier.animateItem(
+                                placementSpec = tween(500)
+                            ),
                             dismissInfo = DismissInfo(
                                 dismissState = dismissState,
                                 background = {
