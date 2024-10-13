@@ -2,7 +2,7 @@
 
 It is a simple task management app.
 Used Technologies:
-Room DB, Dagger-Hilt, Compose Destinations,MVVM, Flow, Lottie Animation. 
+Room DB, Dagger-Hilt, Compose Destinations, Flow, Lottie Animation and Unit Testing. 
 
 ## Built with
 * Kotlin
