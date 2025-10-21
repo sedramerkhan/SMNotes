@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'org.jetbrains.kotlin.plugin.compose'
 
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
@@ -9,12 +10,12 @@ plugins {
 }
 
 android {
-    compileSdk 34
+    compileSdk 36
 
     defaultConfig {
         applicationId "com.smnotes"
-        minSdk 23
-        targetSdk 33
+        minSdk 28
+        targetSdk 36
         versionCode 1
         versionName "1.0"
 
@@ -42,9 +43,6 @@ android {
     }
     buildFeatures {
         compose true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion compose_version
     }
     packagingOptions {
         resources {
@@ -99,7 +97,7 @@ dependencies {
     implementation "io.github.raamcosta.compose-destinations:animations-core:$nav"
     ksp "io.github.raamcosta.compose-destinations:ksp:$nav"
 
-    implementation "androidx.compose.material:material-icons-extended:$compose_version"
+    implementation "androidx.compose.material:material-icons-extended:1.7.8"
 
     //Room
     def room_version = "2.6.1"

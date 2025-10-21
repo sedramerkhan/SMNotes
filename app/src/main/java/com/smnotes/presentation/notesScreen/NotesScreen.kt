@@ -12,7 +12,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Sort
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Sort
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -147,8 +146,8 @@ fun NotesScreen(
                             },
                             dismissedToEnd = {
                                 snackbarType = SnackbarType.Normal
-                                clipboardManager.setText(AnnotatedString(note.title + "\n" + note.content))
                                 scope.launch {
+                                    clipboardManager.setText(AnnotatedString(note.title + "\n" + note.content))
                                     scaffoldState.snackbarHostState.showSnackbar(
                                         message = "Copied",
                                     )
@@ -173,7 +172,7 @@ fun NotesScreen(
                                 .clickable {
                                     navigator.navigate(NoteScreenDestination(note.id, note.color))
                                 }
-                                .animateItemPlacement(
+                                .animateItem(
                                     tween(500)
                                 ),
                             dismissInfo = DismissInfo(
