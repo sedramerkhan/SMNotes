@@ -2,7 +2,6 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
 }
@@ -86,7 +85,7 @@ dependencies {
 
     // Room
     implementation libs.bundles.room
-    kapt libs.room.compiler
+    ksp libs.room.compiler
 
     // Lottie
     implementation libs.lottie.compose
@@ -95,5 +94,5 @@ dependencies {
     testImplementation libs.bundles.test
     androidTestImplementation libs.bundles.android.test
     androidTestImplementation libs.hilt.android.testing
-    kaptAndroidTest libs.hilt.android.testing
+    kspAndroidTest libs.hilt.compiler
 }
