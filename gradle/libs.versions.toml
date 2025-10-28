@@ -1,8 +1,8 @@
 [versions]
 # Android & Kotlin
 android-gradle-plugin = "8.13.0"
-kotlin = "2.0.21"
-ksp = "2.0.21-1.0.25"
+kotlin = "2.2.20"
+ksp = "2.2.20-2.0.4"
 
 # Compose
 compose = "1.9.3"
