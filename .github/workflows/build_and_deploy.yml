@@ -5,7 +5,7 @@ name: Build and Deploy to Telegram
 on:
   push:
     # Uncomment the line below to build on every commit to main branch
-    # branches: [ main ]
+    # branches: [ master ]
     # Build only when a version tag is pushed (e.g., v1.0, v1.1, v2.0)
     # Prevents building on every commit, only builds releases
     tags:
