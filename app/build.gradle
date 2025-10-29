@@ -76,8 +76,6 @@ dependencies {
     ksp libs.hilt.compiler
     implementation libs.hilt.navigation.compose
 
-    // Accompanist
-    implementation libs.accompanist.systemuicontroller
 
     // Navigation
     implementation libs.compose.destinations.animations.core

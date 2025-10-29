@@ -6,11 +6,9 @@ import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 
 @SuppressLint("ConflictingOnColor")
@@ -55,12 +53,7 @@ fun SMNotesTheme(
         typography = LoraTypography,
         shapes = Shapes
     ) {
-        val systemUiController = rememberSystemUiController()
-        SideEffect {
-            systemUiController.setStatusBarColor(Color.Transparent)
-            systemUiController.statusBarDarkContentEnabled = !darkTheme
-            systemUiController.navigationBarDarkContentEnabled = !darkTheme
-        }
+
         CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
             content()
         }
