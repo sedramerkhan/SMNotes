@@ -18,10 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.smnotes.presentation.destinations.NoteScreenDestination
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.smnotes.presentation.notesScreen.components.*
 import com.smnotes.presentation.notesScreen.components.drawer.MainDrawer
 import com.smnotes.presentation.theme.Gold
@@ -33,10 +30,9 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @ExperimentalAnimationApi
-@Destination
 @Composable
 fun NotesScreen(
-    navigator: DestinationsNavigator,
+    onOpenNote: (id: Long, color: Int) -> Unit,
     viewModel: NotesViewModel = hiltViewModel()
 ) = viewModel.run {
     val state = state.value
@@ -90,7 +86,7 @@ fun NotesScreen(
                 modifier = Modifier.navigationBarsPadding(),
                 icon = Icons.Default.Add
             ) {
-                navigator.navigate(NoteScreenDestination(-1, -1))
+                onOpenNote(-1, -1)
             }
         },
         drawerContent = {
@@ -170,7 +166,7 @@ fun NotesScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clickable {
-                                    navigator.navigate(NoteScreenDestination(note.id, note.color))
+                                    onOpenNote(note.id, note.color)
                                 }
                                 .animateItem(
                                     tween(500)

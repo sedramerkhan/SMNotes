@@ -24,9 +24,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
-import com.ramcosta.composedestinations.annotation.Destination
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.smnotes.domain.model.Note.Companion.COLORS
 import com.smnotes.presentation.noteScreen.components.ColorsDialog
 import com.smnotes.presentation.noteScreen.components.TransparentTextField
@@ -35,13 +33,13 @@ import com.smnotes.presentation.utils.CustomFloatingActionButton
 import com.smnotes.presentation.utils.snackbar.NormalSnackbar
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+
 @OptIn( ExperimentalMaterialApi::class)
-@Destination
 @Composable
 fun NoteScreen(
-    navController: NavController,
     noteId: Long,
     noteColor: Int,
+    onNavigateUp: () -> Unit,
     viewModel: NoteViewModel = hiltViewModel()
 ) = viewModel.run {
     val titleState = noteTitle.value
@@ -66,7 +64,10 @@ fun NoteScreen(
     )
 
 
-
+    // Load note when noteId is available
+    LaunchedEffect(key1 = noteId) {
+        viewModel.loadNote(noteId)
+    }
 
     if (colorDialogState) {
         ColorsDialog(
@@ -95,7 +96,7 @@ fun NoteScreen(
                     )
                 }
                 is NoteViewModel.UiEvent.SaveNote -> {
-                    navController.navigateUp()
+                    onNavigateUp()
                 }
             }
         }

@@ -4,6 +4,8 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.jetbrains.kotlin.serialization)
+
 }
 
 android {
@@ -78,8 +80,14 @@ dependencies {
 
 
     // Navigation
-    implementation libs.compose.destinations.animations.core
-    ksp libs.compose.destinations.ksp
+    implementation libs.androidx.navigation.compose
+    // Navigation 3 (runtime dependencies - Compose integration not available yet)
+    implementation libs.androidx.navigation3.runtime
+    implementation libs.androidx.navigation3.ui
+    implementation libs.androidx.navigation3.viewmodel
+    implementation libs.androidx.navigation3.adaptive
+    implementation(libs.kotlinx.serialization.core)
+
 
     // Room
     implementation libs.bundles.room

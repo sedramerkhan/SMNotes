@@ -2,7 +2,6 @@ package com.smnotes.presentation
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
@@ -12,9 +11,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.core.view.WindowInsetsControllerCompat
-import androidx.navigation.compose.currentBackStackEntryAsState
+// Navigation Compose (using standard API - Navigation 3 Compose integration pending)
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.ramcosta.composedestinations.DestinationsNavHost
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 import com.smnotes.presentation.theme.SMNotesTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -44,14 +47,46 @@ class MainActivity : ComponentActivity() {
                 val currentBackStack by navController.currentBackStackEntryAsState()
                 val currentRoute = currentBackStack?.destination?.route
 
-                Log.i("currentRoute", currentRoute ?: "null")
-                DestinationsNavHost(
-                    navGraph = NavGraphs.root,
-                    navController = navController
-                )
+                // Navigation graph
+                NavHost(
+                    navController = navController,
+                    startDestination = "splash"
+                ) {
+                    composable("splash") {
+                        com.smnotes.presentation.splashScreen.SplashScreen(
+                            onFinished = {
+                                navController.navigate("notes") {
+                                    popUpTo("splash") { inclusive = true }
+                                }
+                            }
+                        )
+                    }
+                    composable("notes") {
+                        com.smnotes.presentation.notesScreen.NotesScreen(
+                            onOpenNote = { id, color ->
+                                navController.navigate("note/$id/$color")
+                            }
+                        )
+                    }
+                    composable(
+                        route = "note/{id}/{color}",
+                        arguments = listOf(
+                            navArgument("id") { type = NavType.LongType },
+                            navArgument("color") { type = NavType.IntType }
+                        )
+                    ) { backStackEntry ->
+                        val id = backStackEntry.arguments?.getLong("id") ?: -1L
+                        val color = backStackEntry.arguments?.getInt("color") ?: -1
+                        com.smnotes.presentation.noteScreen.NoteScreen(
+                            noteId = id,
+                            noteColor = color,
+                            onNavigateUp = { navController.popBackStack() }
+                        )
+                    }
+                }
 
                 // Update status bar text color based on current destination
-                val isSplashScreen = currentRoute?.contains("splash_screen") == true
+                val isSplashScreen = currentRoute?.contains("splash") == true
                 SetSystemBarColors(
                     isDark = application.isDark,
                     isSplashScreen = isSplashScreen

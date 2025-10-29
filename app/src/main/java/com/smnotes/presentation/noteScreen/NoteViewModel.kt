@@ -5,13 +5,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.toArgb
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.smnotes.domain.model.InvalidNoteException
 import com.smnotes.domain.model.Note
 import com.smnotes.domain.usecase.NoteUseCases
-import com.smnotes.presentation.destinations.NoteScreenDestination
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -20,8 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NoteViewModel @Inject constructor(
-    private val noteUseCases: NoteUseCases,
-    savedStateHandle: SavedStateHandle
+    private val noteUseCases: NoteUseCases
 ) : ViewModel() {
 
     private val _noteTitle = mutableStateOf(
@@ -52,21 +49,19 @@ class NoteViewModel @Inject constructor(
 
     var colorDialogState by mutableStateOf(false)
 
-    init {
-        NoteScreenDestination.argsFrom(savedStateHandle).noteId.let { noteId ->
-            if(noteId != -1L) {
-                viewModelScope.launch {
-                    noteUseCases.getNote(noteId)?.also { note ->
-                        currentNoteId = note.id
-                        _noteTitle.value = noteTitle.value.copy(
-                            text = note.title,
-                        )
-                        _noteContent.value = _noteContent.value.copy(
-                            text = note.content,
-                        )
-                        _noteColor.value = note.color
-                        _noteImportant.value = note.important
-                    }
+    fun loadNote(noteId: Long) {
+        if(noteId != -1L) {
+            viewModelScope.launch {
+                noteUseCases.getNote(noteId)?.also { note ->
+                    currentNoteId = note.id
+                    _noteTitle.value = noteTitle.value.copy(
+                        text = note.title,
+                    )
+                    _noteContent.value = _noteContent.value.copy(
+                        text = note.content,
+                    )
+                    _noteColor.value = note.color
+                    _noteImportant.value = note.important
                 }
             }
         }
