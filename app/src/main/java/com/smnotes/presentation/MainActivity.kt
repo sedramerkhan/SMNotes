@@ -13,11 +13,11 @@ import androidx.compose.runtime.getValue
 import androidx.core.view.WindowInsetsControllerCompat
 // Navigation Compose (using standard API - Navigation 3 Compose integration pending)
 // Using simple key-based navigator host
-import com.smnotes.presentation.navigation.AppNav3Host
-import com.smnotes.presentation.navigation.ScreenKey
+import com.smnotes.presentation.navigation.NavigationRoot
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import com.smnotes.presentation.navigation.Splash
 import com.smnotes.presentation.theme.SMNotesTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -45,9 +45,9 @@ class MainActivity : ComponentActivity() {
             SMNotesTheme(application.isDark) {
                 var isSplashScreen by remember { mutableStateOf(false) }
 
-                AppNav3Host(
+                NavigationRoot(
                     onDestinationChanged = { key ->
-                        isSplashScreen = key is ScreenKey.Splash
+                        isSplashScreen = key is Splash
                     }
                 )
 

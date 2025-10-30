@@ -64,13 +64,6 @@ class NoteViewModel @Inject constructor(
                     _noteImportant.value = note.important
                 }
             }
-        } else {
-            // New note: reset state to defaults
-            currentNoteId = 0
-            _noteTitle.value = NoteTextFieldState(hint = "Enter title...")
-            _noteContent.value = NoteTextFieldState(hint = "Enter some content")
-            _noteColor.value = Note.COLORS.random().toArgb()
-            _noteImportant.value = false
         }
     }
 

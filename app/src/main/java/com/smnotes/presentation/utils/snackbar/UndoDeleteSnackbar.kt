@@ -3,6 +3,7 @@ package com.smnotes.presentation.utils.snackbar
 import android.annotation.SuppressLint
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -95,9 +96,9 @@ fun SnackText(text: String) {
 
 @ExperimentalAnimationApi
 fun addAnimation(duration: Int = 800): ContentTransform {
-    return slideInVertically(animationSpec = tween(durationMillis = duration)) { height -> height } + fadeIn(
+    return (slideInVertically(animationSpec = tween(durationMillis = duration)) { height -> height } + fadeIn(
         animationSpec = tween(durationMillis = duration)
-    ) with slideOutVertically(animationSpec = tween(durationMillis = duration)) { height -> -height } + fadeOut(
+    )).togetherWith(slideOutVertically(animationSpec = tween(durationMillis = duration)) { height -> -height } + fadeOut(
         animationSpec = tween(durationMillis = duration)
-    )
+    ))
 }
