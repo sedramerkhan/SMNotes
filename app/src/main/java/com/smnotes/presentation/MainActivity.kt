@@ -17,6 +17,7 @@ import com.smnotes.presentation.navigation.AppNav3Host
 import com.smnotes.presentation.navigation.ScreenKey
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import com.smnotes.presentation.theme.SMNotesTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
