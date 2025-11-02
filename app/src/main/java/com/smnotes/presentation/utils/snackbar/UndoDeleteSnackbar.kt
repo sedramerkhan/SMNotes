@@ -43,7 +43,7 @@ fun UndoDeleteSnackbar(
             val paddingH = 30.dp
             Card(
                 shape = RoundedCornerShape(10.dp),
-                backgroundColor = Color.White,
+                backgroundColor = MaterialTheme.colors.onSurface,
                 modifier = Modifier
                     .padding(bottom = 60.dp, start = paddingH, end = paddingH)
                     .fillMaxWidth(),
@@ -91,6 +91,7 @@ fun SnackText(text: String) {
         text = text,
         style = MaterialTheme.typography.body2,
         textAlign = TextAlign.Center,
+        color = Color.Black
     )
 }
 

@@ -103,7 +103,7 @@ fun NoteTitleContent(title: String, content: String) {
         Text(
             text = title,
             style = MaterialTheme.typography.h3,
-            color = MaterialTheme.colors.onSurface,
+            color = Color.Black,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
@@ -111,7 +111,7 @@ fun NoteTitleContent(title: String, content: String) {
         Text(
             text = content,
             style = MaterialTheme.typography.body1,
-            color = MaterialTheme.colors.onSurface,
+            color = Color.Black,
             maxLines = 10,
             overflow = TextOverflow.Ellipsis
         )
