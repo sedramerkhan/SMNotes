@@ -39,6 +39,7 @@ fun NavigationRoot(
             rememberViewModelStoreNavEntryDecorator(), //Allows ViewModels to be scoped to entries in the back stack.
 
         ),
+        sceneStrategy = rememberTwoPaneSceneStrategy(),
         entryProvider = { key ->
             // Notify host about destination change
             onDestinationChanged(key)
@@ -57,6 +58,7 @@ fun NavigationRoot(
 
                 is Notes -> NavEntry(
                     key = key,
+                    metadata = TwoPaneScene.twoPane()
                 ) {
                     NotesScreen(
                         onOpenNote = { id, color -> backStack.add(Note(id, color)) }
@@ -65,6 +67,7 @@ fun NavigationRoot(
 
                 is Note -> NavEntry(
                     key = key,
+                    metadata = TwoPaneScene.twoPane()
                 ) {
                     NoteScreen(
                         noteId = key.id,
