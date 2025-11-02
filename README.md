@@ -60,10 +60,13 @@ A simple note-taking Android app built with Jetpack Compose.
 
 ## Architecture
 
-Clean Architecture with:
+**Clean Architecture** with:
 - **Data Layer**: Room Database, Repository
 - **Domain Layer**: Use cases, Models
 - **Presentation Layer**: ViewModels, Compose UI
+
+**MVI Pattern**  
+
 
 ## Setup
 
