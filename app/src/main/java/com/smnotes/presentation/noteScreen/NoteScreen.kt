@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import com.smnotes.domain.model.Note.Companion.COLORS
 import org.koin.androidx.compose.koinViewModel
 import com.smnotes.presentation.noteScreen.components.ColorsDialog
+import com.smnotes.presentation.noteScreen.components.MarkAsImportant
 import com.smnotes.presentation.noteScreen.components.TransparentTextField
 import com.smnotes.presentation.theme.Gold
 import com.smnotes.presentation.utils.CustomFloatingActionButton
@@ -34,7 +35,7 @@ import com.smnotes.presentation.utils.snackbar.NormalSnackbar
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-@OptIn( ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun NoteScreen(
     onNavigateUp: () -> Unit,
@@ -88,6 +89,7 @@ fun NoteScreen(
                         message = event.message
                     )
                 }
+
                 is NoteViewModel.UiEvent.SaveNote -> {
                     onNavigateUp()
                 }
@@ -96,7 +98,7 @@ fun NoteScreen(
     }
 
     Scaffold(
-        modifier = Modifier.imePadding() ,
+        modifier = Modifier.imePadding(),
         scaffoldState = scaffoldState,
         snackbarHost = {
             scaffoldState.snackbarHostState
@@ -104,7 +106,8 @@ fun NoteScreen(
         floatingActionButton = {
             Column(
                 modifier = Modifier.navigationBarsPadding(),
-                horizontalAlignment = Alignment.CenterHorizontally) {
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 CustomFloatingActionButton(
                     modifier = Modifier.size(45.dp),
                     icon = Icons.Default.Palette,
@@ -122,26 +125,35 @@ fun NoteScreen(
 
             }
         },
-        ) {
+    ) {
 
         Box(
             modifier = Modifier
-                .fillMaxSize().padding(it)
+                .fillMaxSize()
+                .padding(it)
                 .pointerInput(Unit) {
                     detectTapGestures(onTap = { focusManager.clearFocus() })
                 }
 
                 .background(noteBackgroundAnimatable.value)
-                .navigationBarsPadding()
-                .padding(vertical = 25.dp, horizontal = 16.dp)
-        ) {
-            Column(Modifier.padding(top = 16.dp).fillMaxSize()) {
-                
-               ImportantRow(animateColor.value) {
-                   onEvent(NoteEvent.SetImportant)
+                .systemBarsPadding()
 
-               }
+        ) {
+            Column(
+                Modifier
+                    .padding(top = 8.dp)
+                    .fillMaxSize()
+            ) {
+
+                MarkAsImportant(
+                    modifier = Modifier.padding(start = 16.dp, end = 8.dp),
+                    animateColor.value
+                ) {
+                    onEvent(NoteEvent.SetImportant)
+                }
+
                 TransparentTextField(
+                    modifier = Modifier.padding(horizontal = 16.dp),
                     text = titleState.text,
                     hint = titleState.hint,
                     onValueChange = {
@@ -161,15 +173,19 @@ fun NoteScreen(
                         },
                     )
                 )
+
                 Spacer(modifier = Modifier.height(16.dp))
+
                 TransparentTextField(
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .weight(1f),
                     text = contentState.text,
                     hint = contentState.hint,
                     onValueChange = {
                         onEvent(NoteEvent.EnteredContent(it))
                     },
                     textStyle = MaterialTheme.typography.body1,
-                    modifier = Modifier.weight(1f),
                     keyboardOptions = KeyboardOptions(),
                     keyboardActions = KeyboardActions(),
                 )
@@ -185,35 +201,3 @@ fun NoteScreen(
     }
 }
 
-
-@Composable
-fun ImportantRow(
-    animateColor : Color,
-    onClick : () -> Unit
-){
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 8.dp),
-        verticalAlignment = Alignment.CenterVertically, 
-        horizontalArrangement = Arrangement.SpaceBetween
-    ){
-        Text(
-            text = "Mark as Important",
-            style = MaterialTheme.typography.h4,
-            color = Color.Black
-        )
-
-        IconButton(
-            onClick = onClick,
-        ) {
-            Icon(
-                imageVector = Icons.Default.Star,
-                contentDescription = "important note",
-                tint = animateColor
-            )
-        }
-    }
-
-}

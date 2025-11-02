@@ -1,10 +1,8 @@
 package com.smnotes.presentation.notesScreen.components
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.scaleIn
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
@@ -13,7 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
-import com.smnotes.presentation.utils.STATUS_BAR_HEIGHT
 
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -28,7 +25,7 @@ fun CustomTopAppBar(
     actions: @Composable (RowScope.() -> Unit)= {},
 ) {
     TopAppBar(
-        modifier = Modifier.padding(top= STATUS_BAR_HEIGHT),
+        modifier = Modifier.statusBarsPadding(),
         title = {
                 Text(text = title, style = style , modifier = modifier)
         },
