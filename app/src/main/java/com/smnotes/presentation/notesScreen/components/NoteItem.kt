@@ -40,11 +40,11 @@ fun NoteItem(
         dismissContent = {
             Box {
                 CanvasNoteShape(modifier = Modifier.matchParentSize(), color = note.color)
-                NoteTitle_Content(title = note.title, content = note.content)
+                NoteTitleContent(title = note.title, content = note.content)
                 NoteIcons(
                     modifier = Modifier.align(Alignment.BottomEnd),
-                    icon1 = Icons.Default.Star,
-                    onClick1 = {
+                    icon = Icons.Default.Star,
+                    onClick = {
                         onImportantClick()
 //                        startAnimation = !startAnimation
                     },
@@ -93,7 +93,7 @@ fun CanvasNoteShape(
 }
 
 @Composable
-fun NoteTitle_Content(title: String, content: String) {
+fun NoteTitleContent(title: String, content: String) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -122,16 +122,16 @@ fun NoteTitle_Content(title: String, content: String) {
 @Composable
 fun NoteIcons(
     modifier: Modifier,
-    icon1: ImageVector,
-    onClick1: () -> Unit,
+    icon: ImageVector,
+    onClick: () -> Unit,
     animateColor: Color,
 ) {
         IconButton(
-            onClick = onClick1,
+            onClick = onClick,
             modifier = modifier,
         ) {
             Icon(
-                imageVector = icon1,
+                imageVector = icon,
                 contentDescription = "important note",
                 tint = animateColor
             )

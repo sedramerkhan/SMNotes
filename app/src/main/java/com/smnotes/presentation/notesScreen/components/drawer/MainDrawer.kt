@@ -72,7 +72,7 @@ fun DrawerItemsView(
             if (selected == it && !isDark)
                 MaterialTheme.colors.primary
             else MaterialTheme.colors.onSurface.copy(alpha = if (isDark) .8f else .6f)
-        val round = RoundedCornerShape(20.dp)
+        val roundedCornerShape = RoundedCornerShape(20.dp)
         val width =
             animateDpAsState(
                 targetValue = if (selected == it) 28.dp else 2.dp, animationSpec = tween(
@@ -82,8 +82,8 @@ fun DrawerItemsView(
             )
         Box(
             Modifier
-                .fillMaxWidth(.9f).border(width.value, backgroundColor, round)
-                .clickable { onItemSelected(it) }
+                .fillMaxWidth(.9f).border(width.value, backgroundColor, roundedCornerShape)
+                .clip(roundedCornerShape).clickable { onItemSelected(it) }
         ) {
             Row(
                 Modifier.padding(horizontal = 16.dp, vertical = 8.dp),

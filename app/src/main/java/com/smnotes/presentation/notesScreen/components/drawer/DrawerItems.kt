@@ -12,8 +12,8 @@ enum class DrawerItems(val value: String,val icon: ImageVector){
 }
 
 fun getDrawerItem(value: String): DrawerItems? {
-    val map =  DrawerItems.values().associateBy( DrawerItems::value)
+    val map =  DrawerItems.entries.associateBy( DrawerItems::value)
     return map[value]
 }
 
-fun getDrawerItems() = DrawerItems.values().toList()
+fun getDrawerItems() = DrawerItems.entries
