@@ -1,15 +1,29 @@
-# About The Project
+# SMNotes 📝
 
-It is a simple task management app.
-Used Technologies:
-Room DB, Dagger-Hilt, Compose Destinations, Flow, Lottie Animation and Unit Testing. 
+A simple note-taking Android app built with Jetpack Compose.
 
-## Built with
-* Kotlin
-* Jetpack Compose
+## Features
 
-[comment]: <> (the images are stored in issues)
-## Light Mode
+- Create, edit, and delete notes
+- Mark notes as important
+- Customizable note colors
+- Sort notes by title, date, or color
+- Light/Dark theme
+- Swipe to delete with undo
+- Copy note content
+
+## Tech Stack
+
+- **Kotlin** + **Jetpack Compose**
+- **Koin** - Dependency Injection
+- **Navigation 3** - Modern navigation with adaptive layouts
+- **Room Database** - Local data persistence
+- **Coroutines & Flow** - Async operations
+- **Lottie** - Animations
+
+## Screenshots
+
+### Light Mode
 
 <p float="left">
 
@@ -21,7 +35,8 @@ Room DB, Dagger-Hilt, Compose Destinations, Flow, Lottie Animation and Unit Test
 
 </p>
 
-## Dark Mode
+### Dark Mode
+
 <p float="left">
 
 <img src="https://user-images.githubusercontent.com/87071899/200059568-b9db311a-01ad-45f2-86c7-1cf9fff54e01.jpg" width="200" height="500" hspace="20"/>
@@ -32,3 +47,30 @@ Room DB, Dagger-Hilt, Compose Destinations, Flow, Lottie Animation and Unit Test
 
 </p>
 
+## Architecture
+
+Clean Architecture with:
+- **Data Layer**: Room Database, Repository
+- **Domain Layer**: Use cases, Models
+- **Presentation Layer**: ViewModels, Compose UI
+
+## Setup
+
+### Prerequisites
+- Android Studio Hedgehog (2023.1.1) or later
+- JDK 17 or higher
+- Android SDK with API level 28+ and compileSdk 36
+
+### Installation Steps
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yourusername/SMNotes.git
+   cd SMNotes
+   ```
+
+2. **Open in Android Studio**
+  
+
+3. **Sync && Run the app**
+  
