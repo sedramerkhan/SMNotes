@@ -31,7 +31,7 @@ A simple note-taking Android app built with Jetpack Compose.
 
 <img src="https://user-images.githubusercontent.com/87071899/200059678-8fbdad05-ab9b-4be0-a66c-0de9d8a850eb.jpg" width="200" height="500" hspace="20"/>
 
-<img src="https://user-images.githubusercontent.com/87071899/200059713-da99c072-088b-4517-be60-87b8ada9c5bd.jpg" width="200" height="500"/>
+<img src="https://user-images.githubusercontent.com/87071899/200059713-da99c072-088b-4517-be60-87b8ada9c5bd.jpg" width="200" height="500" hspace="20"/>
 
 </p>
 
@@ -43,9 +43,20 @@ A simple note-taking Android app built with Jetpack Compose.
 
 <img src="https://user-images.githubusercontent.com/87071899/200059598-c72861a2-560e-4b81-a791-575bfd3d50c9.jpg" width="200" height="500" hspace="20"/>
 
-<img src="https://user-images.githubusercontent.com/87071899/200059405-7534951b-e592-458f-a506-ff5c5679e11e.jpg" width="200" height="500"/>
+<img src="https://user-images.githubusercontent.com/87071899/200059405-7534951b-e592-458f-a506-ff5c5679e11e.jpg" width="200" height="500" hspace="20"/>
 
 </p>
+
+### Tow Pane Scene
+
+<p float="left">
+
+<img src="https://github.com/user-attachments/assets/2f159f75-59f0-453e-9c4f-ca4ecf5df8d5" width="500" height="200" hspace="20"/>
+
+<img src="https://github.com/user-attachments/assets/0aff0c4b-3021-4819-9065-476df5e515e7" width="500" height="200" hspace="20"/>
+
+</p>
+
 
 ## Architecture
 
@@ -66,7 +77,6 @@ Clean Architecture with:
 1. **Clone the repository**
    ```bash
    git clone https://github.com/yourusername/SMNotes.git
-   cd SMNotes
    ```
 
 2. **Open in Android Studio**
