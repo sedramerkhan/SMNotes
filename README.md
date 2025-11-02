@@ -39,7 +39,7 @@ A simple note-taking Android app built with Jetpack Compose.
 
 <p float="left">
 
-<img src="https://user-images.githubusercontent.com/87071899/200059568-b9db311a-01ad-45f2-86c7-1cf9fff54e01.jpg" width="200" height="500" hspace="20"/>
+<img src="https://github.com/user-attachments/assets/cae87581-d96e-4ec7-ac76-ad3a9b026dce" width="200" height="500" hspace="20"/>
 
 <img src="https://user-images.githubusercontent.com/87071899/200059598-c72861a2-560e-4b81-a791-575bfd3d50c9.jpg" width="200" height="500" hspace="20"/>
 
@@ -53,10 +53,9 @@ A simple note-taking Android app built with Jetpack Compose.
 
 <img src="https://github.com/user-attachments/assets/2f159f75-59f0-453e-9c4f-ca4ecf5df8d5" width="500" height="200" hspace="20"/>
 
-<img src="https://github.com/user-attachments/assets/0aff0c4b-3021-4819-9065-476df5e515e7" width="500" height="200" hspace="20"/>
+<img src="https://github.com/user-attachments/assets/d790a905-62aa-41e9-ba86-00b1b9107246" width="500" height="200" hspace="20"/>
 
 </p>
-
 
 ## Architecture
 
