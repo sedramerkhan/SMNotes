@@ -19,6 +19,7 @@ import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import com.smnotes.presentation.notesScreen.components.*
+import com.smnotes.presentation.theme.LocalThemeState
 import org.koin.androidx.compose.koinViewModel
 import com.smnotes.presentation.notesScreen.components.drawer.MainDrawer
 import com.smnotes.presentation.theme.Gold
@@ -41,6 +42,8 @@ fun NotesScreen(
     val scope = rememberCoroutineScope()
 
     val clipboardManager = LocalClipboardManager.current
+    val themeState = LocalThemeState.current
+    val isDark by themeState.isDark
 
     val drawerState = scaffoldState.drawerState
     var seconds by remember {
@@ -98,7 +101,7 @@ fun NotesScreen(
                 scope.launch {
                     drawerState.close()
                 }
-            }, isDark = application.isDark, toggleLightTheme = { application.toggleLightTheme() })
+            }, isDark = isDark, toggleLightTheme = themeState.toggleTheme)
         }
     ) {
         Box(

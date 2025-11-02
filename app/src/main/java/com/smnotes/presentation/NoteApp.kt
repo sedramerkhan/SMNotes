@@ -3,6 +3,7 @@ package com.smnotes.presentation
 import android.app.Application
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.State
 import androidx.compose.runtime.setValue
 import com.smnotes.di.appModule
 import org.koin.android.ext.koin.androidContext
@@ -10,7 +11,12 @@ import org.koin.core.context.startKoin
 
 class NoteApp : Application() {
 
-    var isDark by mutableStateOf(false)
+    private val _isDark = mutableStateOf(false)
+    val isDark: State<Boolean> = _isDark
+    
+    var isDarkValue: Boolean
+        get() = _isDark.value
+        set(value) { _isDark.value = value }
 
     override fun onCreate() {
         super.onCreate()
@@ -21,6 +27,6 @@ class NoteApp : Application() {
     }
 
     fun toggleLightTheme() {
-        isDark = !isDark
+        _isDark.value = !_isDark.value
     }
 }

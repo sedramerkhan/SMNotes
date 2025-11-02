@@ -8,17 +8,18 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.core.view.WindowInsetsControllerCompat
-// Navigation Compose (using standard API - Navigation 3 Compose integration pending)
-// Using simple key-based navigator host
 import com.smnotes.presentation.navigation.NavigationRoot
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.smnotes.presentation.navigation.Splash
+import com.smnotes.presentation.theme.LocalThemeState
 import com.smnotes.presentation.theme.SMNotesTheme
+import com.smnotes.presentation.theme.ThemeState
 import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
@@ -39,20 +40,35 @@ class MainActivity : ComponentActivity() {
         )
 
         setContent {
-            SMNotesTheme(application.isDark) {
-                var isSplashScreen by remember { mutableStateOf(false) }
-
-                NavigationRoot(
-                    onDestinationChanged = { key ->
-                        isSplashScreen = key is Splash
-                    }
-                )
-
-                // Update status bar text color based on current destination
-                SetSystemBarColors(
+            // Keep ThemeState stable - only recreate if application changes
+            // This avoids unnecessary recompositions while maintaining reactivity
+            val themeState = remember(application) {
+                ThemeState(
                     isDark = application.isDark,
-                    isSplashScreen = isSplashScreen
+                    toggleTheme = { application.toggleLightTheme() }
                 )
+            }
+            
+            val isDark by themeState.isDark
+            
+            // Provide theme state via CompositionLocal
+            // ThemeState is stable, so only composables reading isDark recompose
+            CompositionLocalProvider(LocalThemeState provides themeState) {
+                SMNotesTheme(isDark) {
+                    var isSplashScreen by remember { mutableStateOf(false) }
+
+                    NavigationRoot(
+                        onDestinationChanged = { key ->
+                            isSplashScreen = key is Splash
+                        }
+                    )
+
+                    // Update status bar text color based on current destination
+                    SetSystemBarColors(
+                        isDark = isDark,
+                        isSplashScreen = isSplashScreen
+                    )
+                }
             }
         }
     }

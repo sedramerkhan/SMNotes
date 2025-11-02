@@ -38,7 +38,7 @@ val appModule = module {
         )
     }
 
-    viewModelOf (:: NoteViewModel )
+    viewModelOf(::NoteViewModel)
     
-    viewModel { NotesViewModel(get(), get()) }
+    viewModel { NotesViewModel(get()) }
 }

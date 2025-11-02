@@ -4,13 +4,12 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.smnotes.domain.model.Note
 import com.smnotes.domain.usecase.NoteUseCases
 import com.smnotes.domain.order.NoteOrder
 import com.smnotes.domain.order.OrderType
-import com.smnotes.presentation.NoteApp
 import com.smnotes.presentation.notesScreen.components.drawer.DrawerItems
 import com.smnotes.presentation.utils.snackbar.SnackbarType
 import kotlinx.coroutines.Job
@@ -20,11 +19,7 @@ import kotlinx.coroutines.launch
 
 class NotesViewModel(
     private val noteUseCases: NoteUseCases,
-    application: NoteApp,
-) : AndroidViewModel(application) {
-
-    val application
-        get() = getApplication<NoteApp>()
+) : ViewModel() {
 
     private val _state = mutableStateOf(NotesState())
     val state: State<NotesState> = _state
