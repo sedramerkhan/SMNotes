@@ -10,29 +10,28 @@ import androidx.lifecycle.viewModelScope
 import com.smnotes.domain.model.InvalidNoteException
 import com.smnotes.domain.model.Note
 import com.smnotes.domain.usecase.NoteUseCases
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class NoteViewModel @Inject constructor(
-    private val noteUseCases: NoteUseCases
+class NoteViewModel(
+    private val noteUseCases: NoteUseCases,
+    private val noteId: Long,
+    private val color: Int
 ) : ViewModel() {
 
     private val _noteTitle = mutableStateOf(
         NoteTextFieldState(
-        hint = "Enter title..."
-    )
+            hint = "Enter title..."
+        )
     )
 
     val noteTitle: State<NoteTextFieldState> = _noteTitle
 
     private val _noteContent = mutableStateOf(
         NoteTextFieldState(
-        hint = "Enter some content"
-    )
+            hint = "Enter some content"
+        )
     )
     val noteContent: State<NoteTextFieldState> = _noteContent
 
@@ -49,8 +48,10 @@ class NoteViewModel @Inject constructor(
 
     var colorDialogState by mutableStateOf(false)
 
-    fun loadNote(noteId: Long) {
-        if(noteId != -1L) {
+    init {
+        if (noteId != -1L) {
+
+            _noteColor.value = color
             viewModelScope.launch {
                 noteUseCases.getNote(noteId)?.also { note ->
                     currentNoteId = note.id
@@ -68,23 +69,27 @@ class NoteViewModel @Inject constructor(
     }
 
     fun onEvent(event: NoteEvent) {
-        when(event) {
+        when (event) {
             is NoteEvent.SetImportant -> {
                 _noteImportant.value = !noteImportant.value
             }
+
             is NoteEvent.EnteredTitle -> {
                 _noteTitle.value = noteTitle.value.copy(
                     text = event.value
                 )
             }
+
             is NoteEvent.EnteredContent -> {
                 _noteContent.value = _noteContent.value.copy(
                     text = event.value
                 )
             }
+
             is NoteEvent.ChangeColor -> {
                 _noteColor.value = event.color
             }
+
             is NoteEvent.SaveNote -> {
                 viewModelScope.launch {
                     try {
@@ -94,12 +99,12 @@ class NoteViewModel @Inject constructor(
                                 content = noteContent.value.text,
                                 timestamp = System.currentTimeMillis(),
                                 color = noteColor.value,
-                                important =  noteImportant.value,
+                                important = noteImportant.value,
                                 id = currentNoteId
                             )
                         )
                         _eventFlow.emit(UiEvent.SaveNote)
-                    } catch(e: InvalidNoteException) {
+                    } catch (e: InvalidNoteException) {
                         _eventFlow.emit(
                             UiEvent.ShowSnackbar(
                                 message = e.message ?: "Couldn't save note"
@@ -112,7 +117,7 @@ class NoteViewModel @Inject constructor(
     }
 
     sealed class UiEvent {
-        data class ShowSnackbar(val message: String): UiEvent()
-        object SaveNote: UiEvent()
+        data class ShowSnackbar(val message: String) : UiEvent()
+        object SaveNote : UiEvent()
     }
 }

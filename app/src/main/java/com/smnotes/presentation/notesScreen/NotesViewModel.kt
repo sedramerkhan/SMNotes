@@ -13,15 +13,12 @@ import com.smnotes.domain.order.OrderType
 import com.smnotes.presentation.NoteApp
 import com.smnotes.presentation.notesScreen.components.drawer.DrawerItems
 import com.smnotes.presentation.utils.snackbar.SnackbarType
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class NotesViewModel @Inject constructor(
+class NotesViewModel(
     private val noteUseCases: NoteUseCases,
     application: NoteApp,
 ) : AndroidViewModel(application) {

@@ -19,14 +19,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.smnotes.presentation.navigation.Splash
 import com.smnotes.presentation.theme.SMNotesTheme
-import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
 
-@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    @Inject
-    lateinit var application: NoteApp
+    private val application: NoteApp by inject()
 
 
     @OptIn(ExperimentalAnimationApi::class)

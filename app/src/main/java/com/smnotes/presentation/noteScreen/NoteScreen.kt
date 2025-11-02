@@ -24,8 +24,8 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.smnotes.domain.model.Note.Companion.COLORS
+import org.koin.androidx.compose.koinViewModel
 import com.smnotes.presentation.noteScreen.components.ColorsDialog
 import com.smnotes.presentation.noteScreen.components.TransparentTextField
 import com.smnotes.presentation.theme.Gold
@@ -37,10 +37,8 @@ import kotlinx.coroutines.launch
 @OptIn( ExperimentalMaterialApi::class)
 @Composable
 fun NoteScreen(
-    noteId: Long,
-    noteColor: Int,
     onNavigateUp: () -> Unit,
-    viewModel: NoteViewModel = hiltViewModel()
+    viewModel: NoteViewModel = koinViewModel()
 ) = viewModel.run {
     val titleState = noteTitle.value
     val contentState = noteContent.value
@@ -49,7 +47,7 @@ fun NoteScreen(
 
     val noteBackgroundAnimatable = remember {
         Animatable(
-            Color(if (noteColor != -1) noteColor else viewModel.noteColor.value)
+            Color(viewModel.noteColor.value)
         )
     }
     val scope = rememberCoroutineScope()
@@ -63,11 +61,6 @@ fun NoteScreen(
         )
     )
 
-
-    // Load note when noteId is available
-    LaunchedEffect(key1 = noteId) {
-        viewModel.loadNote(noteId)
-    }
 
     if (colorDialogState) {
         ColorsDialog(

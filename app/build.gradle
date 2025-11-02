@@ -2,7 +2,6 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
     alias(libs.plugins.jetbrains.kotlin.serialization)
 
@@ -73,10 +72,10 @@ dependencies {
     implementation libs.androidx.compose.material.icons.extended
     implementation libs.androidx.constraintlayout.compose
 
-    // Hilt
-    implementation libs.hilt.android
-    ksp libs.hilt.compiler
-    implementation libs.hilt.navigation.compose
+    // Koin
+    implementation libs.koin.core
+    implementation libs.koin.android
+    implementation libs.koin.androidx.compose
 
 
     // Navigation 3
@@ -97,6 +96,4 @@ dependencies {
     // Testing
     testImplementation libs.bundles.test
     androidTestImplementation libs.bundles.android.test
-    androidTestImplementation libs.hilt.android.testing
-    kspAndroidTest libs.hilt.compiler
 }

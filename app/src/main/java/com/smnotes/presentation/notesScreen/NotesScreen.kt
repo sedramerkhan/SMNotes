@@ -18,8 +18,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.smnotes.presentation.notesScreen.components.*
+import org.koin.androidx.compose.koinViewModel
 import com.smnotes.presentation.notesScreen.components.drawer.MainDrawer
 import com.smnotes.presentation.theme.Gold
 import com.smnotes.presentation.utils.CustomFloatingActionButton
@@ -33,7 +33,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun NotesScreen(
     onOpenNote: (id: Long, color: Int) -> Unit,
-    viewModel: NotesViewModel = hiltViewModel()
+    viewModel: NotesViewModel = koinViewModel()
 ) = viewModel.run {
     val state = state.value
 

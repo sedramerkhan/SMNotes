@@ -1,56 +1,44 @@
 package com.smnotes.di
 
-import android.app.Application
-import android.content.Context
 import androidx.room.Room
 import com.smnotes.data.repository.NoteRepositoryImpl
 import com.smnotes.data.repository.NoteRepository
 import com.smnotes.data.database.NoteDatabase
 import com.smnotes.domain.usecase.*
 import com.smnotes.presentation.NoteApp
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
+import com.smnotes.presentation.noteScreen.NoteViewModel
+import com.smnotes.presentation.notesScreen.NotesViewModel
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.module.dsl.viewModel
+import org.koin.core.module.dsl.viewModelOf
+import org.koin.dsl.module
 
-@Module
-@InstallIn(SingletonComponent::class)
-object AppModule {
+val appModule = module {
+    single { androidContext() as NoteApp }
 
-    @Singleton
-    @Provides
-    fun provideApplication(@ApplicationContext app: Context): NoteApp {
-        return app as NoteApp
-    }
-
-
-    @Provides
-    @Singleton
-    fun provideNoteDatabase(app: Application): NoteDatabase {
-        return Room.databaseBuilder(
-            app,
+    single {
+        Room.databaseBuilder(
+            androidContext(),
             NoteDatabase::class.java,
             NoteDatabase.DATABASE_NAME
         ).build()
     }
 
-    @Provides
-    @Singleton
-    fun provideNoteRepository(db: NoteDatabase): NoteRepository {
-        return NoteRepositoryImpl(db.noteDao())
+    single<NoteRepository> {
+        NoteRepositoryImpl(get<NoteDatabase>().noteDao())
     }
 
-    @Provides
-    @Singleton
-    fun provideNoteUseCases(repository: NoteRepository): NoteUseCases {
-        return NoteUseCases(
-            getNotes = GetNotes(repository),
-            getImportantNotes = GetImportantNotes(repository),
-            deleteNote = DeleteNote(repository),
-            addNote = AddNote(repository),
-            getNote = GetNote(repository)
+    single {
+        NoteUseCases(
+            getNotes = GetNotes(get()),
+            getImportantNotes = GetImportantNotes(get()),
+            deleteNote = DeleteNote(get()),
+            addNote = AddNote(get()),
+            getNote = GetNote(get())
         )
     }
+
+    viewModelOf (:: NoteViewModel )
+    
+    viewModel { NotesViewModel(get(), get()) }
 }

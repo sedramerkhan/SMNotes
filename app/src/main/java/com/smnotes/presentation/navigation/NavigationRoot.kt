@@ -12,6 +12,8 @@ import com.smnotes.presentation.notesScreen.NotesScreen
 import com.smnotes.presentation.noteScreen.NoteScreen
 import com.smnotes.presentation.splashScreen.SplashScreen
 import kotlinx.serialization.Serializable
+import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Serializable
 data object Splash : NavKey
@@ -70,8 +72,8 @@ fun NavigationRoot(
                     metadata = TwoPaneScene.twoPane()
                 ) {
                     NoteScreen(
-                        noteId = key.id,
-                        noteColor = key.color,
+                       viewModel = koinViewModel { parametersOf(
+                            key.id, key.color,) },
                         onNavigateUp = { backStack.removeLastOrNull() }
                     )
                 }
