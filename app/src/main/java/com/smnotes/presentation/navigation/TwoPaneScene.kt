@@ -33,13 +33,13 @@ class TwoPaneScene<T : Any>(
             ) {
                 Box(
                     modifier = Modifier
-                        .weight(0.3f)
+                        .weight(0.4f)
                 ) {
                     firstEntry.Content()
                 }
                 Box(
                     modifier = Modifier
-                        .weight(0.7f)
+                        .weight(0.6f)
                 ) {
                     secondEntry.Content()
                 }
