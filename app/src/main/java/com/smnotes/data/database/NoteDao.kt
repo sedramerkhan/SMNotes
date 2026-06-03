@@ -46,4 +46,7 @@ interface NoteDao {
 
     @Query("SELECT * FROM note WHERE remoteId IS NOT NULL")
     suspend fun getNotesWithRemoteId(): List<Note>
+
+    @Query("DELETE FROM note")
+    suspend fun deleteAllNotes()
 }

@@ -15,6 +15,10 @@ class AuthRepositoryImpl(
         val result = remoteDataSource.login(email, password)
         return result.fold(
             onSuccess = { dto ->
+                val previousEmail = sessionStore.getEmail()
+                if (previousEmail != null && previousEmail != email) {
+                    noteDao.deleteAllNotes()
+                }
                 sessionStore.saveTokens(dto.accessToken, dto.refreshToken)
                 sessionStore.saveEmail(email)
                 Result.success(Unit)
@@ -28,8 +32,7 @@ class AuthRepositoryImpl(
     }
 
     override suspend fun logout() {
-        noteDao.resetAllSyncStatus()
-        sessionStore.clearAll()
+        sessionStore.clearTokens()
     }
 
     override fun isLoggedIn(): Boolean = sessionStore.isLoggedIn()

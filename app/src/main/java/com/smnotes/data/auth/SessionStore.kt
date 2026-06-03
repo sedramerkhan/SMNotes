@@ -34,6 +34,13 @@ class SessionStore(context: Context) {
 
     fun isLoggedIn(): Boolean = getRefreshToken() != null
 
+    fun clearTokens() {
+        prefs.edit {
+            remove(KEY_REFRESH_TOKEN)
+        }
+        accessToken = null
+    }
+
     fun clearAll() {
         prefs.edit { clear() }
         accessToken = null
