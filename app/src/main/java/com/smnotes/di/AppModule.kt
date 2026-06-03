@@ -16,6 +16,9 @@ import com.smnotes.domain.repository.AuthRepository
 import com.smnotes.domain.sync.SyncManager
 import com.smnotes.domain.usecase.*
 import com.smnotes.BuildConfig
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import com.smnotes.presentation.NoteApp
 import com.smnotes.presentation.authScreen.AuthViewModel
 import com.smnotes.presentation.noteScreen.NoteViewModel
@@ -51,9 +54,10 @@ val networkModule = module {
 }
 
 val domainModule = module {
+    single { CoroutineScope(SupervisorJob() + Dispatchers.IO) }
     single<AuthRepository> { AuthRepositoryImpl(get(), get(), get()) }
     single { SyncManager(get(), get(), get()) }
-    single<NoteRepository> { NoteRepositoryImpl(get(), get(), get(), get()) }
+    single<NoteRepository> { NoteRepositoryImpl(get(), get(), get(), get(), get()) }
 
     single {
         NoteUseCases(

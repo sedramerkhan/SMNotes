@@ -7,13 +7,16 @@ import com.smnotes.domain.model.SyncStatus
 import com.smnotes.domain.repository.AuthRepository
 import com.smnotes.domain.repository.NoteRepository
 import com.smnotes.domain.sync.SyncManager
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 
 class NoteRepositoryImpl(
     private val dao: NoteDao,
     private val authRepository: AuthRepository,
     private val networkMonitor: NetworkMonitor,
-    private val syncManager: SyncManager
+    private val syncManager: SyncManager,
+    private val applicationScope: CoroutineScope
 ) : NoteRepository {
 
     override fun getNotes(): Flow<List<Note>> = dao.getNotes()
@@ -29,7 +32,7 @@ class NoteRepositoryImpl(
         }
         dao.insertNote(note.copy(syncStatus = syncStatus))
         if (authRepository.isLoggedIn() && networkMonitor.isConnected()) {
-            syncManager.syncPending()
+            applicationScope.launch { syncManager.syncPending() }
         }
     }
 
@@ -44,7 +47,7 @@ class NoteRepositoryImpl(
         // would silently null-out the remoteId and break the backend DELETE.
         dao.markAsPendingDelete(note.id)
         if (networkMonitor.isConnected()) {
-            syncManager.syncPending()
+            applicationScope.launch { syncManager.syncPending() }
         }
     }
 }
