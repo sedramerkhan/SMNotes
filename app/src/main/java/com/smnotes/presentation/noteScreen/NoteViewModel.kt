@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.smnotes.domain.model.InvalidNoteException
 import com.smnotes.domain.model.Note
+import com.smnotes.domain.model.SyncStatus
 import com.smnotes.domain.usecase.NoteUseCases
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -21,17 +22,12 @@ class NoteViewModel(
 ) : ViewModel() {
 
     private val _noteTitle = mutableStateOf(
-        NoteTextFieldState(
-            hint = "Enter title..."
-        )
+        NoteTextFieldState(hint = "Enter title...")
     )
-
     val noteTitle: State<NoteTextFieldState> = _noteTitle
 
     private val _noteContent = mutableStateOf(
-        NoteTextFieldState(
-            hint = "Enter some content"
-        )
+        NoteTextFieldState(hint = "Enter some content")
     )
     val noteContent: State<NoteTextFieldState> = _noteContent
 
@@ -45,24 +41,23 @@ class NoteViewModel(
     val eventFlow = _eventFlow.asSharedFlow()
 
     private var currentNoteId: Long = 0
+    private var currentRemoteId: String? = null
+    private var currentSyncStatus: SyncStatus = SyncStatus.LOCAL
 
     var colorDialogState by mutableStateOf(false)
 
     init {
         if (noteId != -1L) {
-
             _noteColor.value = color
             viewModelScope.launch {
                 noteUseCases.getNote(noteId)?.also { note ->
                     currentNoteId = note.id
-                    _noteTitle.value = noteTitle.value.copy(
-                        text = note.title,
-                    )
-                    _noteContent.value = _noteContent.value.copy(
-                        text = note.content,
-                    )
-                    _noteColor.value = note.color
-                    _noteImportant.value = note.important
+                    currentRemoteId = note.remoteId
+                    currentSyncStatus = note.syncStatus
+                    _noteTitle.value = noteTitle.value.copy(text = note.title)
+                    _noteContent.value = _noteContent.value.copy(text = note.content)
+                    _noteColor.value = note.color.toInt()
+                    _noteImportant.value = note.isImportant
                 }
             }
         }
@@ -73,23 +68,15 @@ class NoteViewModel(
             is NoteEvent.SetImportant -> {
                 _noteImportant.value = !noteImportant.value
             }
-
             is NoteEvent.EnteredTitle -> {
-                _noteTitle.value = noteTitle.value.copy(
-                    text = event.value
-                )
+                _noteTitle.value = noteTitle.value.copy(text = event.value)
             }
-
             is NoteEvent.EnteredContent -> {
-                _noteContent.value = _noteContent.value.copy(
-                    text = event.value
-                )
+                _noteContent.value = _noteContent.value.copy(text = event.value)
             }
-
             is NoteEvent.ChangeColor -> {
                 _noteColor.value = event.color
             }
-
             is NoteEvent.SaveNote -> {
                 viewModelScope.launch {
                     try {
@@ -98,18 +85,16 @@ class NoteViewModel(
                                 title = noteTitle.value.text,
                                 content = noteContent.value.text,
                                 timestamp = System.currentTimeMillis(),
-                                color = noteColor.value,
-                                important = noteImportant.value,
-                                id = currentNoteId
+                                color = noteColor.value.toLong(),
+                                isImportant = noteImportant.value,
+                                id = currentNoteId,
+                                remoteId = currentRemoteId,
+                                syncStatus = currentSyncStatus
                             )
                         )
                         _eventFlow.emit(UiEvent.SaveNote)
                     } catch (e: InvalidNoteException) {
-                        _eventFlow.emit(
-                            UiEvent.ShowSnackbar(
-                                message = e.message ?: "Couldn't save note"
-                            )
-                        )
+                        _eventFlow.emit(UiEvent.ShowSnackbar(e.message ?: "Couldn't save note"))
                     }
                 }
             }

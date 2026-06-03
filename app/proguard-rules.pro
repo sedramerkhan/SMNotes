@@ -22,3 +22,16 @@
 
 
 -keep class com.smnotes.domain.model.** { *; }
+
+# Remote DTOs — field names must not be renamed (they map to JSON keys sent over the wire)
+-keep class com.smnotes.data.remote.dto.** { *; }
+
+# kotlinx.serialization — preserve the $$serializer companion objects the plugin generates
+-keepattributes *Annotation*, InnerClasses
+-keep,includedescriptorclasses class com.smnotes.data.remote.dto.**$$serializer { *; }
+-keepclassmembers class com.smnotes.data.remote.dto.** {
+    *** Companion;
+}
+-keepclasseswithmembers class com.smnotes.data.remote.dto.** {
+    kotlinx.serialization.KSerializer serializer(...);
+}

@@ -26,10 +26,14 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField "String", "BASE_URL", '"http://172.16.1.191:8080"'
+        }
         release {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "BASE_URL", '"https://your-production-server.com"'
         }
     }
     compileOptions {
@@ -41,6 +45,7 @@ android {
     }
     buildFeatures {
         compose true
+        buildConfig true
     }
     packagingOptions {
         resources {
@@ -92,6 +97,17 @@ dependencies {
 
     // Lottie
     implementation libs.lottie.compose
+
+    // Ktor
+    implementation libs.ktor.client.core
+    implementation libs.ktor.client.okhttp
+    implementation libs.ktor.client.content.neg
+    implementation libs.ktor.serialization.json
+    implementation libs.ktor.client.auth
+    implementation libs.ktor.client.logging
+
+    // Security
+    implementation libs.security.crypto
 
     // Testing
     testImplementation libs.bundles.test

@@ -2,7 +2,7 @@ package com.smnotes.domain.usecase
 
 import com.smnotes.domain.order.NoteOrder
 import com.smnotes.domain.order.OrderType
-import com.smnotes.data.repository.NoteRepository
+import com.smnotes.domain.repository.NoteRepository
 import com.smnotes.domain.model.Note
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

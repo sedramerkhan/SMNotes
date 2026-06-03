@@ -63,8 +63,9 @@ fun CanvasNoteShape(
     modifier: Modifier,
     cornerRadius: Dp = 10.dp,
     cutCornerSize: Dp = 30.dp,
-    color: Int
+    color: Long
 ) {
+    val colorInt = color.toInt()
     Canvas(modifier = modifier) {
         val clipPath = Path().apply {
             lineTo(size.width - cutCornerSize.toPx(), 0f)
@@ -76,13 +77,13 @@ fun CanvasNoteShape(
 
         clipPath(clipPath) {
             drawRoundRect(
-                color = Color(color),
+                color = Color(colorInt),
                 size = size,
                 cornerRadius = CornerRadius(cornerRadius.toPx())
             )
             drawRoundRect(
                 color = Color(
-                    ColorUtils.blendARGB(color, 0x000000, 0.2f)
+                    ColorUtils.blendARGB(colorInt, 0x000000, 0.2f)
                 ),
                 topLeft = Offset(size.width - cutCornerSize.toPx(), -100f),
                 size = Size(cutCornerSize.toPx() + 100f, cutCornerSize.toPx() + 100f),

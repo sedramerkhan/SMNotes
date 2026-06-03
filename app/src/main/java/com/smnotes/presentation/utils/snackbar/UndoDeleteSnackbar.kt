@@ -70,7 +70,7 @@ fun UndoDeleteSnackbar(
                         Text(
                             text = it,
                             style = MaterialTheme.typography.subtitle2,
-                            color = MaterialTheme.colors.primary.copy(alpha = .7f),
+                            color = MaterialTheme.colors.primary,
                             textAlign = TextAlign.Center,
                             modifier = Modifier
                                 .clickable { onPerformAction() }
@@ -91,7 +91,7 @@ fun SnackText(text: String) {
         text = text,
         style = MaterialTheme.typography.body2,
         textAlign = TextAlign.Center,
-        color = Color.Black
+        color = MaterialTheme.colors.surface
     )
 }
 

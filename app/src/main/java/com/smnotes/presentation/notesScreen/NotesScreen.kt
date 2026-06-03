@@ -18,7 +18,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
+import com.smnotes.domain.model.Note
 import com.smnotes.presentation.notesScreen.components.*
+import com.smnotes.presentation.notesScreen.components.OfflineBanner
+import com.smnotes.domain.repository.AuthRepository
+import org.koin.compose.koinInject
 import com.smnotes.presentation.theme.LocalThemeState
 import org.koin.androidx.compose.koinViewModel
 import com.smnotes.presentation.notesScreen.components.drawer.MainDrawer
@@ -34,7 +38,9 @@ import kotlinx.coroutines.launch
 @Composable
 fun NotesScreen(
     onOpenNote: (id: Long, color: Int) -> Unit,
-    viewModel: NotesViewModel = koinViewModel()
+    onNavigateToAuth: () -> Unit = {},
+    viewModel: NotesViewModel = koinViewModel(),
+    authRepository: AuthRepository = koinInject()
 ) = viewModel.run {
     val state = state.value
 
@@ -46,8 +52,11 @@ fun NotesScreen(
     val isDark by themeState.isDark
 
     val drawerState = scaffoldState.drawerState
-    var seconds by remember {
-        mutableStateOf(4)
+    var seconds by remember { mutableStateOf(4) }
+    var pendingDeleteNote by remember { mutableStateOf<Note?>(null) }
+    val displayedNotes = remember(state.notes, pendingDeleteNote) {
+        if (pendingDeleteNote != null) state.notes.filter { it.id != pendingDeleteNote!!.id }
+        else state.notes
     }
     Scaffold(
         scaffoldState = scaffoldState,
@@ -93,25 +102,38 @@ fun NotesScreen(
             }
         },
         drawerContent = {
-            MainDrawer(selected = selectedItemDrawer, onItemSelected = {
-                if (selectedItemDrawer != it) {
-                    selectedItemDrawer = it
-                    onEvent(NotesEvent.GetNotes)
+            MainDrawer(
+                selected = selectedItemDrawer,
+                onItemSelected = {
+                    if (selectedItemDrawer != it) {
+                        selectedItemDrawer = it
+                        onEvent(NotesEvent.GetNotes)
+                    }
+                    scope.launch { drawerState.close() }
+                },
+                isDark = isDark,
+                toggleLightTheme = themeState.toggleTheme,
+                isLoggedIn = authRepository.isLoggedIn(),
+                userEmail = authRepository.getLoggedInEmail(),
+                onSignIn = {
+                    scope.launch { drawerState.close() }
+                    onNavigateToAuth()
+                },
+                onSignOut = {
+                    scope.launch { drawerState.close() }
                 }
-                scope.launch {
-                    drawerState.close()
-                }
-            }, isDark = isDark, toggleLightTheme = themeState.toggleTheme)
+            )
         }
     ) {
         Box(
             modifier = Modifier
                 .padding(it)
                 .navigationBarsPadding()
-                .padding(horizontal = 16.dp)
         ) {
             Column {
+                OfflineBanner(visible = state.isOffline)
 
+                Column(modifier = Modifier.padding(horizontal = 16.dp)) {
                 AnimatedVisibility(
                     visible = state.isOrderSectionVisible,
                     enter = fadeIn() + slideInVertically(),
@@ -127,11 +149,12 @@ fun NotesScreen(
                 }
                 Spacer(modifier = Modifier.height(16.dp))
                 LazyColumn(modifier = Modifier.fillMaxSize()) {
-                    items(state.notes, key = { it.id }) { note ->
+                    items(displayedNotes, key = { it.id }) { note ->
                         val dismissState = dismissStateStartEnd(
                             dismissedToStart = {
                                 snackbarType = SnackbarType.Delete
-                                onEvent(NotesEvent.DeleteNote(note))
+                                val noteToDelete = note
+                                pendingDeleteNote = noteToDelete
                                 scope.launch {
                                     seconds = 4
                                     val result = scaffoldState.snackbarHostState.showSnackbar(
@@ -139,7 +162,10 @@ fun NotesScreen(
                                         actionLabel = "Retrieve"
                                     )
                                     if (result == SnackbarResult.ActionPerformed) {
-                                        onEvent(NotesEvent.RestoreNote)
+                                        pendingDeleteNote = null
+                                    } else {
+                                        onEvent(NotesEvent.DeleteNote(noteToDelete))
+                                        pendingDeleteNote = null
                                     }
                                 }
                             },
@@ -153,7 +179,7 @@ fun NotesScreen(
                                 }
                             })
 
-                        var startAnimation by remember { mutableStateOf(note.important) }
+                        var startAnimation by remember { mutableStateOf(note.isImportant) }
 
                         val animateColor = animateColorAsState(
                             targetValue = if (startAnimation) Gold else MaterialTheme.colors.background,
@@ -169,7 +195,7 @@ fun NotesScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clickable {
-                                    onOpenNote(note.id, note.color)
+                                    onOpenNote(note.id, note.color.toInt())
                                 }
                                 .animateItem(
                                     tween(500)
@@ -188,6 +214,7 @@ fun NotesScreen(
                         Spacer(modifier = Modifier.height(16.dp))
                     }
                 }
+                } // end inner Column with horizontal padding
             }
 
             if (snackbarType == SnackbarType.Normal) {

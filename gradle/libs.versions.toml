@@ -30,6 +30,12 @@ kotlinSerialization = "2.1.21"
 # Room
 room = "2.8.2"
 
+# Ktor
+ktor = "3.1.3"
+
+# Security
+security-crypto = "1.1.0-alpha06"
+
 # Lottie
 lottie = "6.6.10"
 
@@ -96,6 +102,17 @@ kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+
+# Ktor
+ktor-client-core        = { group = "io.ktor", name = "ktor-client-core",                 version.ref = "ktor" }
+ktor-client-okhttp      = { group = "io.ktor", name = "ktor-client-okhttp",               version.ref = "ktor" }
+ktor-client-content-neg = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-serialization-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
+ktor-client-auth        = { group = "io.ktor", name = "ktor-client-auth",                 version.ref = "ktor" }
+ktor-client-logging     = { group = "io.ktor", name = "ktor-client-logging",             version.ref = "ktor" }
+
+# Security
+security-crypto = { group = "androidx.security", name = "security-crypto", version.ref = "security-crypto" }
 
 # Lottie
 lottie-compose = { group = "com.airbnb.android", name = "lottie-compose", version.ref = "lottie" }

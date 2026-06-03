@@ -47,13 +47,13 @@ fun SwipeBackground() {
 fun dismissStateStartEnd(dismissedToStart : ()-> Unit, dismissedToEnd :() -> Unit) = rememberDismissState {
     when (it) {
         DismissValue.DismissedToStart -> {
-           dismissedToStart()
+            dismissedToStart()
+            true  // confirm: item stays dismissed until Room removes it from the list
         }
         DismissValue.DismissedToEnd -> {
-          dismissedToEnd()
+            dismissedToEnd()
+            false  // don't remove on copy — item springs back
         }
-        else -> {
-        }
+        else -> false
     }
-    false
 }

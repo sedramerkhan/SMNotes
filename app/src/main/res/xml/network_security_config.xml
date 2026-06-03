@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- Allow HTTP to the dev machine's LAN IP (physical device testing).
+         Change this IP if your machine's address changes. -->
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="false">172.16.1.191</domain>
+    </domain-config>
+</network-security-config>
