@@ -120,7 +120,11 @@ fun NotesScreen(
                     onNavigateToAuth()
                 },
                 onSignOut = {
-                    scope.launch { drawerState.close() }
+                    scope.launch {
+                        authRepository.logout()
+                        drawerState.close()
+                        onNavigateToAuth()
+                    }
                 }
             )
         }

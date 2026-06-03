@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -43,7 +44,8 @@ fun UndoDeleteSnackbar(
             val paddingH = 30.dp
             Card(
                 shape = RoundedCornerShape(10.dp),
-                backgroundColor = MaterialTheme.colors.onSurface,
+                backgroundColor = MaterialTheme.colors.surface,
+                border = BorderStroke(width = 1.dp, color = MaterialTheme.colors.secondary),
                 modifier = Modifier
                     .padding(bottom = 60.dp, start = paddingH, end = paddingH)
                     .fillMaxWidth(),
@@ -70,7 +72,7 @@ fun UndoDeleteSnackbar(
                         Text(
                             text = it,
                             style = MaterialTheme.typography.subtitle2,
-                            color = MaterialTheme.colors.primary,
+                            color = MaterialTheme.colors.secondary,
                             textAlign = TextAlign.Center,
                             modifier = Modifier
                                 .clickable { onPerformAction() }
@@ -91,7 +93,7 @@ fun SnackText(text: String) {
         text = text,
         style = MaterialTheme.typography.body2,
         textAlign = TextAlign.Center,
-        color = MaterialTheme.colors.surface
+        color = MaterialTheme.colors.onSurface
     )
 }
 

@@ -50,6 +50,8 @@ fun MainDrawer(
                 onSignIn = onSignIn,
                 onSignOut = onSignOut
             )
+            Divider(Modifier.fillMaxWidth(.8f).padding(top = 8.dp, bottom = 16.dp))
+
             Switch(isDark = isDark, toggleLightTheme = toggleLightTheme)
         }
     }
@@ -75,7 +77,6 @@ fun AuthSection(
                     imageVector = Icons.Default.AccountCircle,
                     contentDescription = null,
                     modifier = Modifier.size(24.dp),
-                    tint = MaterialTheme.colors.onSurface.copy(alpha = 0.7f)
                 )
                 Spacer(Modifier.width(8.dp))
                 Text(
@@ -85,17 +86,25 @@ fun AuthSection(
                 )
             }
             TextButton(onClick = onSignOut) {
-                Text(stringResource(R.string.sign_out))
+                Text(stringResource(R.string.sign_out), color = MaterialTheme.colors.onSurface)
             }
         }
     } else {
         TextButton(
             onClick = onSignIn,
-            modifier = Modifier.fillMaxWidth(.9f)
+            modifier = Modifier.fillMaxWidth(.9f),
+            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
         ) {
-            Icon(Icons.Default.AccountCircle, contentDescription = null)
-            Spacer(Modifier.width(8.dp))
-            Text(stringResource(R.string.sign_in))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(Icons.Default.AccountCircle, contentDescription = null,
+                    modifier = Modifier.size(24.dp),)
+                Spacer(Modifier.width(8.dp))
+                Text(stringResource(R.string.sign_in), color = MaterialTheme.colors.onSurface)
+            }
         }
     }
 }
@@ -150,7 +159,6 @@ fun DrawerItemsView(
 
 @Composable
 fun Switch(isDark: Boolean, toggleLightTheme: () -> Unit) {
-    Divider(Modifier.fillMaxWidth(.8f).padding(top = 8.dp, bottom = 16.dp))
     Row(
         modifier = Modifier.fillMaxWidth(.9f).padding(bottom = 20.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
