@@ -11,6 +11,7 @@ A simple note-taking Android app built with Jetpack Compose.
 - Light/Dark theme
 - Swipe to delete with undo
 - Copy note content
+- Sync notes to remote server (optional login)
 
 ## Tech Stack
 
@@ -18,6 +19,7 @@ A simple note-taking Android app built with Jetpack Compose.
 - **Koin** - Dependency Injection
 - **Navigation 3** - Modern navigation with adaptive layouts
 - **Room Database** - Local data persistence
+- **Ktor Client** - HTTP networking for remote sync
 - **Coroutines & Flow** - Async operations
 - **Lottie** - Animations
 
@@ -60,11 +62,13 @@ A simple note-taking Android app built with Jetpack Compose.
 ## Architecture
 
 **Clean Architecture** with:
-- **Data Layer**: Room Database, Repository
+- **Data Layer**: Room Database (local), Ktor Client (remote API), Repository
 - **Domain Layer**: Use cases, Models
 - **Presentation Layer**: ViewModels, Compose UI
 
-**MVI Pattern**  
+**MVI Pattern**
+
+**Backend**: Spring Boot REST API — notes are synced remotely when the user is logged in; the app works fully offline otherwise. 
 
 
 ## Setup
