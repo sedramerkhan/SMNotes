@@ -1,29 +1,12 @@
 package com.smnotes.domain.model
 
-import androidx.compose.ui.graphics.Color
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-import com.smnotes.presentation.theme.*
-
-@Entity
 data class Note(
     val title: String,
     val content: String,
     val timestamp: Long,
     val color: Long,
-    @ColumnInfo(name = "important") val isImportant: Boolean = false,
-    val remoteId: String? = null,
-    val syncStatus: SyncStatus = SyncStatus.LOCAL,
-    @PrimaryKey(autoGenerate = true)
+    val isImportant: Boolean = false,
     val id: Long = 0,
-) {
-    companion object {
-        val COLORS = listOf(
-            RedOrange, LightGreen, Violet, BabyBlue, RedPink, Teal200, Purple200,
-            Pink70, Cyan, Teal, Lime, Color.LightGray, Pink20, Green
-        )
-    }
-}
+)
 
 class InvalidNoteException(message: String) : Exception(message)

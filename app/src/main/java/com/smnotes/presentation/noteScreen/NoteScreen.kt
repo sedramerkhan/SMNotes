@@ -24,7 +24,6 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
-import com.smnotes.domain.model.Note.Companion.COLORS
 import org.koin.androidx.compose.koinViewModel
 import com.smnotes.presentation.noteScreen.components.ColorsDialog
 import com.smnotes.presentation.noteScreen.components.MarkAsImportant
@@ -66,7 +65,7 @@ fun NoteScreen(
     if (colorDialogState) {
         ColorsDialog(
             onDismiss = { colorDialogState = false },
-            colors = COLORS,
+            colors = NoteColors,
             selectedColor = viewModel.noteColor.value,
             onColorSelected = {
                 scope.launch {

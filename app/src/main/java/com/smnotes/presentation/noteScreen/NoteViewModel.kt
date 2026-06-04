@@ -30,7 +30,7 @@ class NoteViewModel(
     )
     val noteContent: State<NoteTextFieldState> = _noteContent
 
-    private val _noteColor = mutableStateOf(Note.COLORS.random().toArgb())
+    private val _noteColor = mutableStateOf(NoteColors.random().toArgb())
     val noteColor: State<Int> = _noteColor
 
     private val _noteImportant = mutableStateOf(false)

@@ -39,10 +39,10 @@ val databaseModule = module {
 
     single {
         Room.databaseBuilder(
-            androidContext(),
-            NoteDatabase::class.java,
-            NoteDatabase.DATABASE_NAME
-        ).addMigrations(NoteDatabase.MIGRATION_1_2, NoteDatabase.MIGRATION_2_3).build()
+                androidContext(),
+                NoteDatabase::class.java,
+                NoteDatabase.DATABASE_NAME
+            ).fallbackToDestructiveMigration(false).build()
     }
 
     single { get<NoteDatabase>().noteDao() }

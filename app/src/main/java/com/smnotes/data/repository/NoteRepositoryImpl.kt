@@ -1,6 +1,7 @@
 package com.smnotes.data.repository
 
 import com.smnotes.data.database.NoteDao
+import com.smnotes.data.database.toEntity
 import com.smnotes.data.network.NetworkMonitor
 import com.smnotes.domain.model.Note
 import com.smnotes.domain.model.SyncStatus
@@ -9,6 +10,7 @@ import com.smnotes.domain.repository.SessionState
 import com.smnotes.domain.sync.SyncManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 class NoteRepositoryImpl(
@@ -19,11 +21,14 @@ class NoteRepositoryImpl(
     private val applicationScope: CoroutineScope
 ) : NoteRepository {
 
-    override fun getNotes(): Flow<List<Note>> = dao.getNotes()
+    override fun getNotes(): Flow<List<Note>> =
+        dao.getNotes().map { entities -> entities.map { it.toDomain() } }
 
-    override fun getImportantNotes(): Flow<List<Note>> = dao.getImportantNotes()
+    override fun getImportantNotes(): Flow<List<Note>> =
+        dao.getImportantNotes().map { entities -> entities.map { it.toDomain() } }
 
-    override suspend fun getNoteById(id: Long): Note? = dao.getNoteById(id)
+    override suspend fun getNoteById(id: Long): Note? =
+        dao.getNoteById(id)?.toDomain()
 
     override suspend fun insertNote(note: Note) {
         val existing = if (note.id != 0L) dao.getNoteById(note.id) else null
@@ -31,7 +36,7 @@ class NoteRepositoryImpl(
             !sessionState.isLoggedIn() -> SyncStatus.LOCAL
             else -> SyncStatus.PENDING_UPLOAD
         }
-        val localId = dao.insertNote(note.copy(syncStatus = syncStatus, remoteId = existing?.remoteId))
+        val localId = dao.insertNote(note.toEntity(remoteId = existing?.remoteId, syncStatus = syncStatus))
         if (sessionState.isLoggedIn() && networkMonitor.isConnected()) {
             applicationScope.launch { syncManager.syncNote(localId) }
         }
@@ -39,7 +44,7 @@ class NoteRepositoryImpl(
 
     override suspend fun deleteNote(note: Note) {
         if (!sessionState.isLoggedIn()) {
-            dao.deleteNote(note)
+            dao.deleteNoteById(note.id)
             return
         }
         // Use a targeted UPDATE (not a full REPLACE) so the existing remoteId in the DB

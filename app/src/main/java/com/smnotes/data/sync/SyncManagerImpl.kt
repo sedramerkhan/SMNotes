@@ -6,7 +6,7 @@ import com.smnotes.data.network.NetworkMonitor
 import com.smnotes.data.remote.datasource.NoteRemoteDataSource
 import com.smnotes.data.remote.dto.NoteRequestDto
 import com.smnotes.data.remote.dto.NoteResponseDto
-import com.smnotes.domain.model.Note
+import com.smnotes.data.database.NoteEntity
 import com.smnotes.domain.model.SyncStatus
 import com.smnotes.domain.sync.SyncManager
 import java.time.Instant
@@ -28,7 +28,7 @@ class SyncManagerImpl(
         remoteNotes.forEach { remote ->
             val existing = noteDao.getNoteByRemoteId(remote.id)
             if (existing == null) {
-                noteDao.upsertNote(remote.toNote())
+                noteDao.upsertNote(remote.toEntity())
             } else if (existing.syncStatus == SyncStatus.SYNCED) {
                 noteDao.upsertNote(
                     existing.copy(
@@ -106,7 +106,7 @@ class SyncManagerImpl(
         }.onFailure { Log.e("SyncManager", "Delete failed for note $localId", it) }
     }
 
-    private fun NoteResponseDto.toNote(): Note = Note(
+    private fun NoteResponseDto.toEntity(): NoteEntity = NoteEntity(
         title = title,
         content = content,
         timestamp = Instant.parse(createdAt).toEpochMilli(),
