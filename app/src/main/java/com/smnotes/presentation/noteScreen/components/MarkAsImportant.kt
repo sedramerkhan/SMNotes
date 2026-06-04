@@ -14,6 +14,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import com.smnotes.R
 
 @Composable
 fun MarkAsImportant(
@@ -29,7 +31,7 @@ fun MarkAsImportant(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            text = "Mark as Important",
+            text = stringResource(R.string.mark_as_important),
             style = MaterialTheme.typography.h4,
             color = Color.Black
         )
@@ -39,7 +41,7 @@ fun MarkAsImportant(
         ) {
             Icon(
                 imageVector = Icons.Default.Star,
-                contentDescription = "important note",
+                contentDescription = stringResource(R.string.cd_important_note),
                 tint = animateColor
             )
         }

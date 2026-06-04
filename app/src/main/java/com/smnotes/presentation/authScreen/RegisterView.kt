@@ -45,6 +45,7 @@ fun RegisterView(
         confirmPassword.isNotBlank() &&
         password == confirmPassword
 
+    val passwordsMismatchMsg = stringResource(R.string.error_passwords_no_match)
     var forceValidate by remember { mutableStateOf(false) }
 
     val submit = {
@@ -76,7 +77,7 @@ fun RegisterView(
                 color = textColor
             )
             Text(
-                text = "Join ${stringResource(R.string.app_name)}",
+                text = stringResource(R.string.register_subtitle, stringResource(R.string.app_name)),
                 style = MaterialTheme.typography.body2,
                 color = textColor.copy(alpha = 0.55f),
             )
@@ -123,7 +124,7 @@ fun RegisterView(
                         imeAction = ImeAction.Done,
                         onImeAction = { submit() },
                         validator = { v ->
-                            if (v.isNotBlank() && v != password) "Passwords do not match" else null
+                            if (v.isNotBlank() && v != password) passwordsMismatchMsg else null
                         },
                     )
 

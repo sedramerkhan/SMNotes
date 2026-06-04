@@ -8,7 +8,9 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.smnotes.R
 
 data class DismissInfo @OptIn(ExperimentalMaterialApi::class) constructor(
     val dismissState: DismissState,
@@ -32,12 +34,12 @@ fun SwipeBackground() {
 
         Icon(
             Icons.Default.CopyAll,
-            contentDescription = "copy",
+            contentDescription = stringResource(R.string.cd_copy),
         )
 
         Icon(
             imageVector = Icons.Default.Delete,
-            contentDescription = "Delete note",
+            contentDescription = stringResource(R.string.cd_delete_note),
         )
     }
 }

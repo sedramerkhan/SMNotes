@@ -11,6 +11,8 @@
     <string name="toggle_to_register">Don\'t have an account? Register</string>
     <string name="toggle_to_login">Already have an account? Sign In</string>
     <string name="continue_without_account">Continue without account</string>
+    <string name="login_welcome">Welcome back</string>
+    <string name="register_subtitle">Join %s</string>
 
     <!-- Auth errors -->
     <string name="error_email_taken">Email already registered</string>
@@ -19,13 +21,54 @@
     <string name="error_unknown">Something went wrong (code %d)</string>
     <string name="error_passwords_no_match">Passwords do not match</string>
     <string name="error_weak_password">Password must be at least 9 characters with 1 uppercase letter and 1 digit</string>
+    <string name="error_unexpected">Unexpected error</string>
+    <string name="error_server_unreachable">Server is unreachable. Please try again later.</string>
+
+    <!-- Field validation errors -->
+    <string name="error_required">This field is required</string>
+    <string name="error_invalid_email">Enter a valid email address</string>
+    <string name="error_password_too_short">Password must be at least 9 characters</string>
+    <string name="error_password_no_uppercase">Must contain at least 1 uppercase letter</string>
+    <string name="error_password_no_digit">Must contain at least 1 digit</string>
+    <string name="error_name_too_short">Name must be at least 2 characters</string>
+
+    <!-- Note editor -->
+    <string name="hint_note_title">Enter title…</string>
+    <string name="hint_note_content">Enter some content</string>
+    <string name="error_note_not_saved">Couldn\'t save note</string>
+    <string name="error_note_title_empty">The title of the note can\'t be empty.</string>
+    <string name="error_note_content_empty">The content of the note can\'t be empty.</string>
+
+    <!-- Notes screen -->
+    <string name="note_deleted">Note deleted, Retrieve it in </string>
+    <string name="retrieve">Retrieve</string>
+    <string name="copied">Copied</string>
+    <string name="mark_as_important">Mark as Important</string>
+    <string name="order_by_title">Title</string>
+    <string name="order_by_date">Date</string>
+    <string name="order_by_color">Color</string>
 
     <!-- Drawer -->
     <string name="sign_out">Sign Out</string>
+    <string name="drawer_home">Home</string>
+    <string name="drawer_important">Important</string>
+    <string name="turn_on_dark_mode">Turn on dark mode</string>
+    <string name="turn_off_dark_mode">Turn off dark mode</string>
 
     <!-- Offline banner -->
     <string name="offline_banner">You\'re offline — changes will sync when you reconnect</string>
 
     <!-- Session -->
     <string name="session_expired">Your session has expired. Please sign in again.</string>
+
+    <!-- Content descriptions -->
+    <string name="cd_important_note">Important note</string>
+    <string name="cd_sort_order">Sort order</string>
+    <string name="cd_radio_button">Radio button</string>
+    <string name="cd_menu">Menu</string>
+    <string name="cd_sort">Sort</string>
+    <string name="cd_copy">Copy</string>
+    <string name="cd_delete_note">Delete note</string>
+    <string name="cd_hide_password">Hide password</string>
+    <string name="cd_show_password">Show password</string>
 </resources>

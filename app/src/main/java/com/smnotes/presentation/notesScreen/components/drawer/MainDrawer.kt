@@ -7,6 +7,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -67,8 +68,7 @@ fun AuthSection(
     if (isLoggedIn && userEmail != null) {
         Row(
             modifier = Modifier
-                .fillMaxWidth(.9f)
-                .padding(bottom = 8.dp),
+                .fillMaxWidth().padding(bottom = 9.dp, start = 20.dp, end = 20.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
@@ -93,7 +93,7 @@ fun AuthSection(
         TextButton(
             onClick = onSignIn,
             modifier = Modifier.fillMaxWidth(.9f),
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -132,7 +132,7 @@ fun DrawerItemsView(
         val color2 = if (selected == it && !isDark)
             MaterialTheme.colors.primary
         else
-            MaterialTheme.colors.onSurface.copy(alpha = if (isDark) .8f else .6f)
+            MaterialTheme.colors.onSurface.copy(alpha = if (isDark) .8f else .7f)
         val roundedCornerShape = RoundedCornerShape(20.dp)
         val width = animateDpAsState(
             targetValue = if (selected == it) 28.dp else 2.dp,
@@ -147,10 +147,11 @@ fun DrawerItemsView(
         ) {
             Row(
                 Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                Icon(imageVector = it.icon, contentDescription = it.value, tint = color2)
-                Text(text = it.value, style = MaterialTheme.typography.h3, color = color2)
+                Icon(imageVector = it.icon, contentDescription = stringResource(it.labelRes), tint = color2)
+                Text(text = stringResource(it.labelRes), style = MaterialTheme.typography.h3, color = color2)
             }
         }
         Spacer(Modifier.height(16.dp))
@@ -160,13 +161,12 @@ fun DrawerItemsView(
 @Composable
 fun Switch(isDark: Boolean, toggleLightTheme: () -> Unit) {
     Row(
-        modifier = Modifier.fillMaxWidth(.9f).padding(bottom = 20.dp),
+        modifier = Modifier.fillMaxWidth().padding(bottom = 20.dp, start = 24.dp, end = 24.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        val on_off = if (isDark) "off" else "on"
         Text(
-            text = "Turn $on_off dark mode",
+            text = stringResource(if (isDark) R.string.turn_off_dark_mode else R.string.turn_on_dark_mode),
             style = MaterialTheme.typography.button,
             color = MaterialTheme.colors.onSurface
         )

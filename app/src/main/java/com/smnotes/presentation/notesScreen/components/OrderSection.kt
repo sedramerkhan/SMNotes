@@ -12,7 +12,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.smnotes.R
 import com.smnotes.domain.order.NoteOrder
 import com.smnotes.domain.order.OrderType
 
@@ -32,12 +34,12 @@ fun OrderSection(
 
         ) {
         CustomRadioButton(
-            text = "Title",
+            text = stringResource(R.string.order_by_title),
             selected = noteOrder is NoteOrder.Title,
             onSelected = { onOrderChange(NoteOrder.Title(noteOrder.orderType)) })
-        CustomRadioButton(text = "Date", selected = noteOrder is NoteOrder.Date,
+        CustomRadioButton(text = stringResource(R.string.order_by_date), selected = noteOrder is NoteOrder.Date,
             onSelected = { onOrderChange(NoteOrder.Date(noteOrder.orderType)) })
-        CustomRadioButton(text = "Color", selected = noteOrder is NoteOrder.Color,
+        CustomRadioButton(text = stringResource(R.string.order_by_color), selected = noteOrder is NoteOrder.Color,
             onSelected = { onOrderChange(NoteOrder.Color(noteOrder.orderType)) })
 
         Spacer(Modifier.weight(1f))
@@ -49,7 +51,7 @@ fun OrderSection(
         }) {
             Icon(
                 imageVector = Icons.Filled.North,
-                contentDescription = "order",
+                contentDescription = stringResource(R.string.cd_sort_order),
                 modifier = Modifier
                     .padding(end = 16.dp)
 //                        .alpha(ContentAlpha.medium)
@@ -75,7 +77,7 @@ fun CustomRadioButton(
 
         Icon(
             imageVector = icon,
-            contentDescription = "Radio button icon",
+            contentDescription = stringResource(R.string.cd_radio_button),
 //                    tint = Color(
 //                        0xFF9B51E0
 //                    )

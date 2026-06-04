@@ -15,10 +15,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.ColorUtils
+import com.smnotes.R
 import com.smnotes.domain.model.Note
 
 
@@ -133,7 +135,7 @@ fun NoteIcons(
         ) {
             Icon(
                 imageVector = icon,
-                contentDescription = "important note",
+                contentDescription = stringResource(R.string.cd_important_note),
                 tint = animateColor
             )
         }

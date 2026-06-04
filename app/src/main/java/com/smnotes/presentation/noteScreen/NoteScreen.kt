@@ -21,7 +21,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import com.smnotes.R
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import org.koin.androidx.compose.koinViewModel
@@ -154,7 +156,7 @@ fun NoteScreen(
                 TransparentTextField(
                     modifier = Modifier.padding(horizontal = 16.dp),
                     text = titleState.text,
-                    hint = titleState.hint,
+                    hint = stringResource(R.string.hint_note_title),
                     onValueChange = {
                         onEvent(NoteEvent.EnteredTitle(it))
                     },
@@ -180,7 +182,7 @@ fun NoteScreen(
                         .padding(horizontal = 16.dp)
                         .weight(1f),
                     text = contentState.text,
-                    hint = contentState.hint,
+                    hint = stringResource(R.string.hint_note_content),
                     onValueChange = {
                         onEvent(NoteEvent.EnteredContent(it))
                     },

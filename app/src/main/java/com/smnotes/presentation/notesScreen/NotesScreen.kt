@@ -16,8 +16,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
+import com.smnotes.R
 import com.smnotes.domain.model.Note
 import com.smnotes.presentation.notesScreen.components.*
 import com.smnotes.presentation.notesScreen.components.OfflineBanner
@@ -47,6 +49,9 @@ fun NotesScreen(
     val clipboardManager = LocalClipboardManager.current
     val themeState = LocalThemeState.current
     val isDark by themeState.isDark
+    val noteDeletedMsg = stringResource(R.string.note_deleted)
+    val retrieveLabel = stringResource(R.string.retrieve)
+    val copiedMsg = stringResource(R.string.copied)
 
     val drawerState = scaffoldState.drawerState
     var seconds by remember { mutableStateOf(4) }
@@ -61,7 +66,7 @@ fun NotesScreen(
             scaffoldState.snackbarHostState
         },
         topBar = {
-            CustomTopAppBar(title = selectedItemDrawer.value,
+            CustomTopAppBar(title = stringResource(selectedItemDrawer.labelRes),
                 navigationIcon = {
                     IconButton(
                         onClick = {
@@ -73,7 +78,7 @@ fun NotesScreen(
                         Icon(
                             modifier = Modifier.padding(end = 4.dp),
                             imageVector = Icons.Default.Menu,
-                            contentDescription = "Menu"
+                            contentDescription = stringResource(R.string.cd_menu)
                         )
                     }
                 },
@@ -85,7 +90,7 @@ fun NotesScreen(
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.Sort,
-                            contentDescription = "Sort"
+                            contentDescription = stringResource(R.string.cd_sort)
                         )
                     }
                 })
@@ -158,8 +163,8 @@ fun NotesScreen(
                                 scope.launch {
                                     seconds = 4
                                     val result = scaffoldState.snackbarHostState.showSnackbar(
-                                        message = "Note deleted, Retrieve it in ",
-                                        actionLabel = "Retrieve"
+                                        message = noteDeletedMsg,
+                                        actionLabel = retrieveLabel
                                     )
                                     if (result == SnackbarResult.ActionPerformed) {
                                         pendingDeleteNote = null
@@ -174,7 +179,7 @@ fun NotesScreen(
                                 scope.launch {
                                     clipboardManager.setText(AnnotatedString(note.title + "\n" + note.content))
                                     scaffoldState.snackbarHostState.showSnackbar(
-                                        message = "Copied",
+                                        message = copiedMsg,
                                     )
                                 }
                             })

@@ -90,7 +90,7 @@ fun LoginView(
 
                 )
             Text(
-                text = "Welcome back",
+                text = stringResource(R.string.login_welcome),
                 style = MaterialTheme.typography.body2,
                 color = textColor.copy(alpha = 0.55f),
             )
