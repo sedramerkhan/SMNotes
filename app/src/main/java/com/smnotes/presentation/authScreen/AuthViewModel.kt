@@ -6,6 +6,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.smnotes.domain.error.AuthError
+import com.smnotes.domain.event.AuthEvent
+import com.smnotes.domain.event.AuthEventBus
 import com.smnotes.domain.sync.SyncManager
 import com.smnotes.domain.usecase.auth.AuthUseCases
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -45,6 +47,7 @@ class AuthViewModel(
             val result = authUseCases.login(email.trim(), password)
             uiState = if (result.isSuccess) {
                 viewModelScope.launch { syncManager.syncOnLogin() }
+                AuthEventBus.events.tryEmit(AuthEvent.LoggedIn)
                 _events.emit(AuthScreenEvent.Success)
                 AuthUiState.Idle
             } else {
@@ -71,6 +74,7 @@ class AuthViewModel(
                 // Auto-login after register
                 authUseCases.login(email.trim(), password)
                 viewModelScope.launch { syncManager.syncOnLogin() }
+                AuthEventBus.events.tryEmit(AuthEvent.LoggedIn)
                 _events.emit(AuthScreenEvent.Success)
                 AuthUiState.Idle
             } else {

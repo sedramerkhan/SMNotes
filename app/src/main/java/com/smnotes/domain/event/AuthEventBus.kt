@@ -8,4 +8,5 @@ object AuthEventBus {
 
 sealed class AuthEvent {
     object SessionExpired : AuthEvent()
+    object LoggedIn : AuthEvent()
 }

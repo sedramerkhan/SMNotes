@@ -8,6 +8,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.smnotes.data.network.ConnectionState
 import com.smnotes.data.network.NetworkMonitor
+import com.smnotes.domain.event.AuthEvent
+import com.smnotes.domain.event.AuthEventBus
 import com.smnotes.domain.model.Note
 import com.smnotes.domain.order.NoteOrder
 import com.smnotes.domain.order.OrderType
@@ -45,6 +47,19 @@ class NotesViewModel(
     init {
         getNotes(NoteOrder.Date(OrderType.Descending))
         observeConnectivity()
+        observeAuthEvents()
+    }
+
+    //to update it with login
+    private fun observeAuthEvents() {
+        viewModelScope.launch {
+            AuthEventBus.events.collect { event ->
+                if (event is AuthEvent.LoggedIn) {
+                    isLoggedIn = authUseCases.isLoggedIn()
+                    loggedInEmail = authUseCases.getLoggedInEmail()
+                }
+            }
+        }
     }
 
     fun onEvent(event: NotesEvent) {

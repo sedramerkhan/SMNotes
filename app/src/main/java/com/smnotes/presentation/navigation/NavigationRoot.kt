@@ -48,6 +48,8 @@ fun NavigationRoot(
                     backStack.removeAll { it is Auth }
                     backStack.add(Auth)
                 }
+
+                else -> {}
             }
         }
     }
