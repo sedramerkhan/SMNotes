@@ -39,7 +39,7 @@ val databaseModule = module {
             androidContext(),
             NoteDatabase::class.java,
             NoteDatabase.DATABASE_NAME
-        ).addMigrations(NoteDatabase.MIGRATION_1_2).build()
+        ).addMigrations(NoteDatabase.MIGRATION_1_2, NoteDatabase.MIGRATION_2_3).build()
     }
 
     single { get<NoteDatabase>().noteDao() }
@@ -69,9 +69,16 @@ val domainModule = module {
         )
     }
 
-    single { LoginUseCase(get()) }
-    single { RegisterUseCase(get()) }
-    single { LogoutUseCase(get()) }
+    single {
+        AuthUseCases(
+            login = Login(get()),
+            register = Register(get()),
+            logout = Logout(get()),
+            isLoggedIn = IsLoggedIn(get()),
+            getLoggedInEmail = GetLoggedInEmail(get()),
+            tryRestoreSession = TryRestoreSession(get())
+        )
+    }
 }
 
 val presentationModule = module {

@@ -6,18 +6,14 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.smnotes.domain.error.AuthError
-import com.smnotes.domain.repository.AuthRepository
 import com.smnotes.domain.sync.SyncManager
-import com.smnotes.domain.usecase.LoginUseCase
-import com.smnotes.domain.usecase.RegisterUseCase
+import com.smnotes.domain.usecase.AuthUseCases
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 
 class AuthViewModel(
-    private val loginUseCase: LoginUseCase,
-    private val registerUseCase: RegisterUseCase,
-    private val authRepository: AuthRepository,
+    private val authUseCases: AuthUseCases,
     private val syncManager: SyncManager
 ) : ViewModel() {
 
@@ -46,7 +42,7 @@ class AuthViewModel(
     private fun login() {
         viewModelScope.launch {
             uiState = AuthUiState.Loading
-            val result = loginUseCase(email.trim(), password)
+            val result = authUseCases.login(email.trim(), password)
             uiState = if (result.isSuccess) {
                 viewModelScope.launch { syncManager.syncOnLogin() }
                 _events.emit(AuthScreenEvent.Success)
@@ -70,10 +66,10 @@ class AuthViewModel(
         }
         viewModelScope.launch {
             uiState = AuthUiState.Loading
-            val result = registerUseCase(email.trim(), password)
+            val result = authUseCases.register(email.trim(), password)
             uiState = if (result.isSuccess) {
                 // Auto-login after register
-                loginUseCase(email.trim(), password)
+                authUseCases.login(email.trim(), password)
                 viewModelScope.launch { syncManager.syncOnLogin() }
                 _events.emit(AuthScreenEvent.Success)
                 AuthUiState.Idle

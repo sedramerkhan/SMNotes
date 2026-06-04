@@ -21,8 +21,6 @@ import androidx.compose.ui.unit.dp
 import com.smnotes.domain.model.Note
 import com.smnotes.presentation.notesScreen.components.*
 import com.smnotes.presentation.notesScreen.components.OfflineBanner
-import com.smnotes.domain.repository.AuthRepository
-import org.koin.compose.koinInject
 import com.smnotes.presentation.theme.LocalThemeState
 import org.koin.androidx.compose.koinViewModel
 import com.smnotes.presentation.notesScreen.components.drawer.MainDrawer
@@ -39,8 +37,7 @@ import kotlinx.coroutines.launch
 fun NotesScreen(
     onOpenNote: (id: Long, color: Int) -> Unit,
     onNavigateToAuth: () -> Unit = {},
-    viewModel: NotesViewModel = koinViewModel(),
-    authRepository: AuthRepository = koinInject()
+    viewModel: NotesViewModel = koinViewModel()
 ) = viewModel.run {
     val state = state.value
 
@@ -113,16 +110,15 @@ fun NotesScreen(
                 },
                 isDark = isDark,
                 toggleLightTheme = themeState.toggleTheme,
-                isLoggedIn = authRepository.isLoggedIn(),
-                userEmail = authRepository.getLoggedInEmail(),
+                isLoggedIn = isLoggedIn,
+                userEmail = loggedInEmail,
                 onSignIn = {
                     scope.launch { drawerState.close() }
                     onNavigateToAuth()
                 },
                 onSignOut = {
-                    scope.launch {
-                        authRepository.logout()
-                        drawerState.close()
+                    logout {
+                        scope.launch { drawerState.close() }
                         onNavigateToAuth()
                     }
                 }

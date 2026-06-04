@@ -11,8 +11,8 @@ import com.smnotes.data.network.NetworkMonitor
 import com.smnotes.domain.model.Note
 import com.smnotes.domain.order.NoteOrder
 import com.smnotes.domain.order.OrderType
-import com.smnotes.domain.repository.AuthRepository
 import com.smnotes.domain.sync.SyncManager
+import com.smnotes.domain.usecase.AuthUseCases
 import com.smnotes.domain.usecase.NoteUseCases
 import com.smnotes.presentation.notesScreen.components.drawer.DrawerItems
 import com.smnotes.presentation.utils.snackbar.SnackbarType
@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
 
 class NotesViewModel(
     private val noteUseCases: NoteUseCases,
-    private val authRepository: AuthRepository,
+    private val authUseCases: AuthUseCases,
     private val networkMonitor: NetworkMonitor,
     private val syncManager: SyncManager
 ) : ViewModel() {
@@ -37,6 +37,10 @@ class NotesViewModel(
     private var recentlyDeletedNote: Note? = null
     private var getNotesJob: Job? = null
     var snackbarType by mutableStateOf(SnackbarType.Normal)
+    var isLoggedIn by mutableStateOf(authUseCases.isLoggedIn())
+        private set
+    var loggedInEmail by mutableStateOf(authUseCases.getLoggedInEmail())
+        private set
 
     init {
         getNotes(NoteOrder.Date(OrderType.Descending))
@@ -80,15 +84,14 @@ class NotesViewModel(
             .distinctUntilChanged()
             .onEach { state ->
                 val isOnline = state == ConnectionState.Available
-                val isLoggedIn = authRepository.isLoggedIn()
-                _state.value = _state.value.copy(isOffline = isLoggedIn && !isOnline)
+                _state.value = _state.value.copy(isOffline = authUseCases.isLoggedIn() && !isOnline)
             }
             .launchIn(viewModelScope)
 
         networkMonitor.observeConnectivityAsFlow()
             .distinctUntilChanged()
             .filter { it == ConnectionState.Available }
-            .onEach { if (authRepository.isLoggedIn()) syncManager.syncPending() }
+            .onEach { if (authUseCases.isLoggedIn()) syncManager.syncPending() }
             .launchIn(viewModelScope)
     }
 
@@ -108,5 +111,14 @@ class NotesViewModel(
         getNotesJob = noteUseCases.getImportantNotes(noteOrder)
             .onEach { notes -> _state.value = state.value.copy(notes = notes, noteOrder = noteOrder) }
             .launchIn(viewModelScope)
+    }
+
+    fun logout(onDone: () -> Unit) {
+        viewModelScope.launch {
+            authUseCases.logout()
+            isLoggedIn = false
+            loggedInEmail = null
+            onDone()
+        }
     }
 }

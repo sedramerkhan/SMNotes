@@ -15,7 +15,6 @@ data class Note(
     @ColumnInfo(name = "important") val isImportant: Boolean = false,
     val remoteId: String? = null,
     val syncStatus: SyncStatus = SyncStatus.LOCAL,
-    val pendingDelete: Boolean = false,
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
 ) {

@@ -30,9 +30,9 @@ class NoteRepositoryImpl(
             !authRepository.isLoggedIn() -> SyncStatus.LOCAL
             else -> SyncStatus.PENDING_UPLOAD
         }
-        dao.insertNote(note.copy(syncStatus = syncStatus))
+        val localId = dao.insertNote(note.copy(syncStatus = syncStatus))
         if (authRepository.isLoggedIn() && networkMonitor.isConnected()) {
-            applicationScope.launch { syncManager.syncPending() }
+            applicationScope.launch { syncManager.syncNote(localId) }
         }
     }
 
@@ -47,7 +47,7 @@ class NoteRepositoryImpl(
         // would silently null-out the remoteId and break the backend DELETE.
         dao.markAsPendingDelete(note.id)
         if (networkMonitor.isConnected()) {
-            applicationScope.launch { syncManager.syncPending() }
+            applicationScope.launch { syncManager.syncDeleteNote(note.id) }
         }
     }
 }
