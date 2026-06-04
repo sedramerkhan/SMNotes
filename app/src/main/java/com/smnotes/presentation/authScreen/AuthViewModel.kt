@@ -83,5 +83,8 @@ class AuthViewModel(
         pw.length >= 9 && pw.any { it.isUpperCase() } && pw.any { it.isDigit() }
 
     private fun Result<*>.toErrorMessage(): String =
-        (exceptionOrNull() as? AuthError)?.toUserMessage() ?: "Unexpected error"
+        when (val e = exceptionOrNull()) {
+            is AuthError -> e.toUserMessage()
+            else -> "Unexpected error"
+        }
 }

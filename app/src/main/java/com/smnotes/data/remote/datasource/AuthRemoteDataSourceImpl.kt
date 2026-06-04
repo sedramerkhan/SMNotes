@@ -15,10 +15,12 @@ class AuthRemoteDataSourceImpl(
 ) : AuthRemoteDataSource {
 
     override suspend fun register(email: String, password: String): Result<Unit> {
-        val response = client.post("$baseUrl/auth/register") {
-            contentType(ContentType.Application.Json)
-            setBody(AuthRequestDto(email, password))
-        }
+        val response = runCatching {
+            client.post("$baseUrl/auth/register") {
+                contentType(ContentType.Application.Json)
+                setBody(AuthRequestDto(email, password))
+            }
+        }.getOrElse { return Result.failure(AuthError.NetworkUnavailable) }
         return when (response.status) {
             HttpStatusCode.OK         -> Result.success(Unit)
             HttpStatusCode.Conflict   -> Result.failure(AuthError.EmailAlreadyExists)
@@ -28,10 +30,12 @@ class AuthRemoteDataSourceImpl(
     }
 
     override suspend fun login(email: String, password: String): Result<AuthResponseDto> {
-        val response = client.post("$baseUrl/auth/login") {
-            contentType(ContentType.Application.Json)
-            setBody(AuthRequestDto(email, password))
-        }
+        val response = runCatching {
+            client.post("$baseUrl/auth/login") {
+                contentType(ContentType.Application.Json)
+                setBody(AuthRequestDto(email, password))
+            }
+        }.getOrElse { return Result.failure(AuthError.NetworkUnavailable) }
         return when (response.status) {
             HttpStatusCode.OK           -> Result.success(response.body())
             HttpStatusCode.Unauthorized -> Result.failure(AuthError.InvalidCredentials)
@@ -41,10 +45,12 @@ class AuthRemoteDataSourceImpl(
     }
 
     override suspend fun refresh(refreshToken: String): Result<AuthResponseDto> {
-        val response = client.post("$baseUrl/auth/refresh") {
-            contentType(ContentType.Application.Json)
-            setBody(RefreshRequestDto(refreshToken))
-        }
+        val response = runCatching {
+            client.post("$baseUrl/auth/refresh") {
+                contentType(ContentType.Application.Json)
+                setBody(RefreshRequestDto(refreshToken))
+            }
+        }.getOrElse { return Result.failure(AuthError.NetworkUnavailable) }
         return when (response.status) {
             HttpStatusCode.OK -> Result.success(response.body())
             else              -> Result.failure(AuthError.Unknown(response.status.value))
