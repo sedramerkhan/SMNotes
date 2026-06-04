@@ -4,8 +4,9 @@ import android.content.Context
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import androidx.core.content.edit
+import com.smnotes.domain.repository.SessionState
 
-class SessionStore(context: Context) {
+class SessionStore(context: Context) : SessionState {
 
     private val masterKey = MasterKey.Builder(context)
         .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
@@ -32,7 +33,7 @@ class SessionStore(context: Context) {
     fun saveEmail(email: String) = prefs.edit { putString(KEY_EMAIL, email) }
     fun getEmail(): String? = prefs.getString(KEY_EMAIL, null)
 
-    fun isLoggedIn(): Boolean = getRefreshToken() != null
+    override fun isLoggedIn(): Boolean = getRefreshToken() != null
 
     fun clearTokens() {
         prefs.edit {

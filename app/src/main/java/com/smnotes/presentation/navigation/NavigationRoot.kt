@@ -14,8 +14,8 @@ import com.smnotes.presentation.noteScreen.NoteScreen
 import com.smnotes.presentation.notesScreen.NotesScreen
 import com.smnotes.presentation.splashScreen.SplashScreen
 import com.smnotes.presentation.splashScreen.SplashViewModel
-import com.smnotes.presentation.utils.AuthEvent
-import com.smnotes.presentation.utils.AuthEventBus
+import com.smnotes.domain.event.AuthEvent
+import com.smnotes.domain.event.AuthEventBus
 import kotlinx.serialization.Serializable
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf

@@ -11,10 +11,13 @@ import com.smnotes.data.remote.datasource.AuthRemoteDataSourceImpl
 import com.smnotes.data.remote.datasource.NoteRemoteDataSource
 import com.smnotes.data.remote.datasource.NoteRemoteDataSourceImpl
 import com.smnotes.data.repository.NoteRepositoryImpl
-import com.smnotes.domain.repository.NoteRepository
+import com.smnotes.data.sync.SyncManagerImpl
 import com.smnotes.domain.repository.AuthRepository
+import com.smnotes.domain.repository.NoteRepository
+import com.smnotes.domain.repository.SessionState
 import com.smnotes.domain.sync.SyncManager
 import com.smnotes.domain.usecase.*
+import com.smnotes.domain.usecase.auth.*
 import com.smnotes.BuildConfig
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -47,6 +50,7 @@ val databaseModule = module {
 
 val networkModule = module {
     single { SessionStore(androidContext()) }
+    single<SessionState> { get<SessionStore>() }
     single { provideHttpClient(get(), BASE_URL) }
     single<AuthRemoteDataSource> { AuthRemoteDataSourceImpl(get(), BASE_URL) }
     single<NoteRemoteDataSource> { NoteRemoteDataSourceImpl(get(), BASE_URL) }
@@ -56,7 +60,7 @@ val networkModule = module {
 val domainModule = module {
     single { CoroutineScope(SupervisorJob() + Dispatchers.IO) }
     single<AuthRepository> { AuthRepositoryImpl(get(), get(), get()) }
-    single { SyncManager(get(), get(), get()) }
+    single<SyncManager> { SyncManagerImpl(get(), get(), get()) }
     single<NoteRepository> { NoteRepositoryImpl(get(), get(), get(), get(), get()) }
 
     single {

@@ -1,4 +1,4 @@
-package com.smnotes.domain.usecase
+package com.smnotes.domain.usecase.auth
 
 import com.smnotes.domain.repository.AuthRepository
 

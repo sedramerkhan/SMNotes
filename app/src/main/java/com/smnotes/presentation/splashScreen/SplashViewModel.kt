@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.smnotes.domain.sync.SyncManager
-import com.smnotes.domain.usecase.AuthUseCases
+import com.smnotes.domain.usecase.auth.AuthUseCases
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 

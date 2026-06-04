@@ -4,8 +4,8 @@ import com.smnotes.data.database.NoteDao
 import com.smnotes.data.network.NetworkMonitor
 import com.smnotes.domain.model.Note
 import com.smnotes.domain.model.SyncStatus
-import com.smnotes.domain.repository.AuthRepository
 import com.smnotes.domain.repository.NoteRepository
+import com.smnotes.domain.repository.SessionState
 import com.smnotes.domain.sync.SyncManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 
 class NoteRepositoryImpl(
     private val dao: NoteDao,
-    private val authRepository: AuthRepository,
+    private val sessionState: SessionState,
     private val networkMonitor: NetworkMonitor,
     private val syncManager: SyncManager,
     private val applicationScope: CoroutineScope
@@ -26,18 +26,19 @@ class NoteRepositoryImpl(
     override suspend fun getNoteById(id: Long): Note? = dao.getNoteById(id)
 
     override suspend fun insertNote(note: Note) {
+        val existing = if (note.id != 0L) dao.getNoteById(note.id) else null
         val syncStatus = when {
-            !authRepository.isLoggedIn() -> SyncStatus.LOCAL
+            !sessionState.isLoggedIn() -> SyncStatus.LOCAL
             else -> SyncStatus.PENDING_UPLOAD
         }
-        val localId = dao.insertNote(note.copy(syncStatus = syncStatus))
-        if (authRepository.isLoggedIn() && networkMonitor.isConnected()) {
+        val localId = dao.insertNote(note.copy(syncStatus = syncStatus, remoteId = existing?.remoteId))
+        if (sessionState.isLoggedIn() && networkMonitor.isConnected()) {
             applicationScope.launch { syncManager.syncNote(localId) }
         }
     }
 
     override suspend fun deleteNote(note: Note) {
-        if (!authRepository.isLoggedIn()) {
+        if (!sessionState.isLoggedIn()) {
             dao.deleteNote(note)
             return
         }

@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.smnotes.domain.error.AuthError
 import com.smnotes.domain.sync.SyncManager
-import com.smnotes.domain.usecase.AuthUseCases
+import com.smnotes.domain.usecase.auth.AuthUseCases
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch

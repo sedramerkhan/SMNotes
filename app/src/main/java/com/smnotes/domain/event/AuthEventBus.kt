@@ -1,4 +1,4 @@
-package com.smnotes.presentation.utils
+package com.smnotes.domain.event
 
 import kotlinx.coroutines.flow.MutableSharedFlow
 

@@ -12,7 +12,7 @@ import com.smnotes.domain.model.Note
 import com.smnotes.domain.order.NoteOrder
 import com.smnotes.domain.order.OrderType
 import com.smnotes.domain.sync.SyncManager
-import com.smnotes.domain.usecase.AuthUseCases
+import com.smnotes.domain.usecase.auth.AuthUseCases
 import com.smnotes.domain.usecase.NoteUseCases
 import com.smnotes.presentation.notesScreen.components.drawer.DrawerItems
 import com.smnotes.presentation.utils.snackbar.SnackbarType

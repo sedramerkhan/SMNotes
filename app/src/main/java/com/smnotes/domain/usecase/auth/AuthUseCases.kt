@@ -1,4 +1,4 @@
-package com.smnotes.domain.usecase
+package com.smnotes.domain.usecase.auth
 
 data class AuthUseCases(
     val login: Login,

@@ -9,7 +9,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.smnotes.domain.model.InvalidNoteException
 import com.smnotes.domain.model.Note
-import com.smnotes.domain.model.SyncStatus
 import com.smnotes.domain.usecase.NoteUseCases
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -41,8 +40,6 @@ class NoteViewModel(
     val eventFlow = _eventFlow.asSharedFlow()
 
     private var currentNoteId: Long = 0
-    private var currentRemoteId: String? = null
-    private var currentSyncStatus: SyncStatus = SyncStatus.LOCAL
 
     var colorDialogState by mutableStateOf(false)
 
@@ -52,8 +49,6 @@ class NoteViewModel(
             viewModelScope.launch {
                 noteUseCases.getNote(noteId)?.also { note ->
                     currentNoteId = note.id
-                    currentRemoteId = note.remoteId
-                    currentSyncStatus = note.syncStatus
                     _noteTitle.value = noteTitle.value.copy(text = note.title)
                     _noteContent.value = _noteContent.value.copy(text = note.content)
                     _noteColor.value = note.color.toInt()
@@ -87,9 +82,7 @@ class NoteViewModel(
                                 timestamp = System.currentTimeMillis(),
                                 color = noteColor.value.toLong(),
                                 isImportant = noteImportant.value,
-                                id = currentNoteId,
-                                remoteId = currentRemoteId,
-                                syncStatus = currentSyncStatus
+                                id = currentNoteId
                             )
                         )
                         _eventFlow.emit(UiEvent.SaveNote)

@@ -3,8 +3,8 @@ package com.smnotes.data.remote
 import com.smnotes.data.auth.SessionStore
 import com.smnotes.data.remote.dto.auth.AuthResponseDto
 import com.smnotes.data.remote.dto.auth.RefreshRequestDto
-import com.smnotes.presentation.utils.AuthEvent
-import com.smnotes.presentation.utils.AuthEventBus
+import com.smnotes.domain.event.AuthEvent
+import com.smnotes.domain.event.AuthEventBus
 import android.util.Log
 import io.ktor.client.*
 import io.ktor.client.call.*
